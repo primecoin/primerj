@@ -27,6 +27,7 @@ public interface IHDAccountProvider {
             , byte[] externalPub, byte[] internalPub, AbstractHD.HDAccountType hdAccountType);
 
     int addMonitoredHDAccount(String firstAddress, boolean isXrandom, byte[] externalPub, byte[] internalPub);
+    int addMonitoredHDMAccount(String firstAddress, boolean isXrandom, byte[] externalPub, byte[] internalPub);
 
     boolean hasMnemonicSeed(int hdAccountId);
 
@@ -43,6 +44,7 @@ public interface IHDAccountProvider {
     boolean hdAccountIsXRandom(int seedId);
 
     List<Integer> getHDAccountSeeds();
+    List<Integer> getHDAccountSeeds(AbstractHD.HDAccountType hdAccountType);
 
     boolean isPubExist(byte[] externalPub, byte[] internalPub);
 }

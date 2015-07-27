@@ -34,13 +34,13 @@ public class DesktopHDMAddress extends HDAddress {
     }
 
     private DesktopHDMKeychain keychain;
-    private HDMAddress.Pubs pubs;
+//    private HDMAddress.Pubs pubs;
 
 
-    private AbstractHD.PathType pathType;
+//    private AbstractHD.PathType pathType;
 
 
-    private boolean isIssued;
+//    private boolean isIssued;
 
     public DesktopHDMAddress(Redeem redeem, AbstractHD.PathType pathType, int addressIndex, DesktopHDMKeychain keychain, boolean isSyncComplete) {
         this(redeem, redeem.getAddress(), pathType, addressIndex, false, isSyncComplete, keychain);
@@ -53,13 +53,19 @@ public class DesktopHDMAddress extends HDAddress {
         this.addressIndex = addressIndex;
         this.isIssued = isIssued;
         this.hdAccountId = keychain.hdSeedId;
-//        this.redeem = pubs.getMultiSigScript().getProgram();
+        this.redeem = redeem.getMultiSigScript().getProgram();
         this.keychain = keychain;
 //        this.pubs = pubs;
     }
 
     public DesktopHDMAddress(HDAddress hdAddress) {
-
+        this.hdAccountId = hdAddress.getHdAccountId();
+        this.pathType = hdAddress.getPathType();
+        this.addressIndex = hdAddress.getAddressIndex();
+        this.isIssued = hdAddress.isIssued();
+        this.address = hdAddress.getAddress();
+        this.redeem = hdAddress.getRedeem();
+        this.syncComplete = hdAddress.isSyncComplete();
     }
 
     public AbstractHD.PathType getPathType() {
@@ -79,10 +85,17 @@ public class DesktopHDMAddress extends HDAddress {
     }
 
     public int getIndex() {
-        return pubs.index;
+        return addressIndex;
     }
 
     public DesktopHDMKeychain getKeychain() {
+        if (keychain == null) {
+            for (DesktopHDMKeychain keychain : AddressManager.getInstance().getDesktopHDMKeychains()) {
+                if (keychain.getHdSeedId() == hdAccountId) {
+                    this.keychain = keychain;
+                }
+            }
+        }
         return keychain;
     }
 
@@ -119,12 +132,12 @@ public class DesktopHDMAddress extends HDAddress {
         List<TransactionSignature> otherSigs = delegate.getOtherSignature(getIndex(), password,
                 unsignHash, tx);
         assert hotSigs.size() == otherSigs.size() && hotSigs.size() == unsignHash.size();
-        return formatInScript(hotSigs, otherSigs, pubs.getMultiSigScript().getProgram());
+        return formatInScript(hotSigs, otherSigs, redeem);
     }
 
     public ArrayList<TransactionSignature> signMyPart(List<byte[]> unsignedHashes,
                                                       CharSequence password) {
-        DeterministicKey key = keychain.getExternalKey(pubs.index, password);
+        DeterministicKey key = keychain.getExternalKey(addressIndex, password);
         ArrayList<TransactionSignature> sigs = new ArrayList<TransactionSignature>();
         for (int i = 0;
              i < unsignedHashes.size();
@@ -138,7 +151,7 @@ public class DesktopHDMAddress extends HDAddress {
     }
 
     public String signMessage(String msg, CharSequence password) {
-        DeterministicKey key = keychain.getExternalKey(pubs.index, password);
+        DeterministicKey key = keychain.getExternalKey(addressIndex, password);
         String result = key.signMessage(msg);
         key.clearPrivateKey();
         return result;
@@ -149,17 +162,17 @@ public class DesktopHDMAddress extends HDAddress {
         throw new RuntimeException("hdm address can't get encrypted private key");
     }
 
-    public byte[] getPubCold() {
-        return pubs.cold;
-    }
-
-    public byte[] getPubHot() {
-        return pubs.hot;
-    }
-
-    public byte[] getPubRemote() {
-        return pubs.remote;
-    }
+//    public byte[] getPubCold() {
+//        return pubs.cold;
+//    }
+//
+//    public byte[] getPubHot() {
+//        return pubs.hot;
+//    }
+//
+//    public byte[] getPubRemote() {
+//        return pubs.remote;
+//    }
 
     public static List<byte[]> formatInScript(List<TransactionSignature> signs1,
                                               List<TransactionSignature> signs2,
@@ -177,17 +190,17 @@ public class DesktopHDMAddress extends HDAddress {
         return result;
     }
 
-    public List<byte[]> getPubs() {
-        ArrayList<byte[]> list = new ArrayList<byte[]>();
-        list.add(pubs.hot);
-        list.add(pubs.cold);
-        list.add(pubs.remote);
-        return list;
-    }
+//    public List<byte[]> getPubs() {
+//        ArrayList<byte[]> list = new ArrayList<byte[]>();
+//        list.add(pubs.hot);
+//        list.add(pubs.cold);
+//        list.add(pubs.remote);
+//        return list;
+//    }
 
     @Override
     public void updateSyncComplete() {
-        AbstractDb.addressProvider.syncComplete(keychain.getHdSeedId(), pubs.index);
+        AbstractDb.addressProvider.syncComplete(keychain.getHdSeedId(), addressIndex);
     }
 
     @Override

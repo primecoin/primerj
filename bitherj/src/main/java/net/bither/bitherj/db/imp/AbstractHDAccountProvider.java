@@ -152,7 +152,20 @@ public abstract class AbstractHDAccountProvider extends AbstractProvider impleme
 //        return seedId;
     }
 
+    @Override
+    public int addMonitoredHDMAccount(String firstAddress, boolean isXrandom, byte[] externalPub, byte[] internalPub) {
+        if (this.isPubExist(externalPub, internalPub)) {
+            return -1;
+        }
+        IDb writeDb = this.getWriteDb();
+        writeDb.beginTransaction();
+        int hdAccountId = this.insertMonitorHDMAccountToDb(writeDb, firstAddress, isXrandom, externalPub, internalPub);
+        writeDb.endTransaction();
+        return hdAccountId;
+    }
+
     protected abstract int insertMonitorHDAccountToDb(IDb db, String firstAddress, boolean isXrandom, byte[] externalPub, byte[] internalPub);
+    protected abstract int insertMonitorHDMAccountToDb(IDb db, String firstAddress, boolean isXrandom, byte[] externalPub, byte[] internalPub);
 
 //    @Override
 //    public boolean hasHDAccountCold() {
@@ -399,6 +412,21 @@ public abstract class AbstractHDAccountProvider extends AbstractProvider impleme
 //                c.close();
 //        }
 //        return hdSeedIds;
+    }
+
+    @Override
+    public List<Integer> getHDAccountSeeds(AbstractHD.HDAccountType hdAccountType) {
+        final List<Integer> hdSeedIds = new ArrayList<Integer>();
+        String sql = "select hd_account_id from hd_account where hd_account_type=?";
+        this.execQueryLoop(sql, new String[] {Integer.toString(hdAccountType.getValue())}, new Function<ICursor, Void>() {
+            @Nullable
+            @Override
+            public Void apply(@Nullable ICursor c) {
+                hdSeedIds.add(c.getInt(0));
+                return null;
+            }
+        });
+        return hdSeedIds;
     }
 
     @Override

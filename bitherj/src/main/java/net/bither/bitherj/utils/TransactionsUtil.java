@@ -334,12 +334,13 @@ public class TransactionsUtil {
             while (hasTx) {
                 Block storedBlock = BlockChain.getInstance().getLastBlock();
                 int storeBlockHeight = storedBlock.getBlockNo();
-                desktopHDMAddress = new DesktopHDMAddress(AbstractDb.hdAddressProvider.addressForPath(desktopHDMKeychain.getHdSeedId(), pathType, addressIndex));
-                if (desktopHDMAddress == null) {
+                HDAddress address = AbstractDb.hdAddressProvider.addressForPath(desktopHDMKeychain.getHdSeedId(), pathType, addressIndex);
+                if (address == null) {
                     hasTx = false;
                     log.warn("AccountAddress", "address is null path {} ,index {}", pathType, addressIndex);
                     continue;
                 }
+                desktopHDMAddress = new DesktopHDMAddress(address);
                 if (desktopHDMAddress.isSyncComplete()) {
                     addressIndex++;
                     continue;

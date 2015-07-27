@@ -1071,7 +1071,9 @@ public abstract class AbstractTxProvider extends AbstractProvider implements ITx
         String existSql = "select count(0) cnt from outs where tx_hash=? and out_sn=?";
         String updateHDAccountIdSql = "update outs set hd_account_id=? where tx_hash=? and out_sn=?";
         String queryHDAddressSql = "select hd_account_id,path_type,address_index from hd_account_addresses where address=?";
-        String updateHDAddressIssuedSql = "update hd_account_addresses set is_issued=? where path_type=? and address_index=? and hd_account_id=?";
+        String updateHDAddressIssuedSql = "update hd_addresses set is_issued=? where path_type=? and address_index=? and hd_account_id=?";
+        String queryHDAccountAddressSql = "select hd_account_id,path_type,address_index from hd__addresses where address=?";
+        String updateHDAccountAddressIssuedSql = "update hd_account_addresses set is_issued=? where path_type=? and address_index=? and hd_account_id=?";
         String queryPrevTxHashSql = "select tx_hash from ins where prev_tx_hash=? and prev_out_sn=?";
         String updateOutStatusSql = "update outs set out_status=? where tx_hash=? and out_sn=?";
         final List<AddressTx> addressTxes = new ArrayList<AddressTx>();
@@ -1099,6 +1101,26 @@ public abstract class AbstractTxProvider extends AbstractProvider implements ITx
                     final int[] tmpHDAccountId = {-1};
                     final int[] tmpPathType = {0};
                     final int[] tmpAddressIndex = {0};
+                    this.execQueryOneRecord(db, queryHDAccountAddressSql, new String[]{outItem.getOutAddress()}, new Function<ICursor, Void>() {
+                        @Nullable
+                        @Override
+                        public Void apply(@Nullable ICursor c) {
+                            tmpHDAccountId[0] = c.getInt(0);
+                            tmpPathType[0] = c.getInt(1);
+                            tmpAddressIndex[0] = c.getInt(2);
+                            return null;
+                        }
+                    });
+                    if (tmpHDAccountId[0] > 0) {
+                        this.execUpdate(db, updateHDAccountAddressIssuedSql
+                                , new String[]{"1", Integer.toString(tmpPathType[0])
+                                    , Integer.toString(tmpAddressIndex[0])
+                                    , Integer.toString(tmpHDAccountId[0])});
+                    }
+
+                    tmpHDAccountId[0] = -1;
+                    tmpPathType[0] = 0;
+                    tmpAddressIndex[0] = 0;
                     this.execQueryOneRecord(db, queryHDAddressSql, new String[]{outItem.getOutAddress()}, new Function<ICursor, Void>() {
                         @Nullable
                         @Override
@@ -1112,8 +1134,8 @@ public abstract class AbstractTxProvider extends AbstractProvider implements ITx
                     if (tmpHDAccountId[0] > 0) {
                         this.execUpdate(db, updateHDAddressIssuedSql
                                 , new String[]{"1", Integer.toString(tmpPathType[0])
-                                    , Integer.toString(tmpAddressIndex[0])
-                                    , Integer.toString(tmpHDAccountId[0])});
+                                , Integer.toString(tmpAddressIndex[0])
+                                , Integer.toString(tmpHDAccountId[0])});
                     }
 
                 }

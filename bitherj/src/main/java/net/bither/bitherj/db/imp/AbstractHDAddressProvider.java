@@ -229,7 +229,7 @@ public abstract class AbstractHDAddressProvider extends AbstractProvider impleme
 
     @Override
     public void updateSyncedForIndex(int hdAccountId, AbstractHD.PathType pathType, int index) {
-        String sql = "update hd_addresses set is_synced=? where path_type=? and address_index>? and hd_account_id=?";
+        String sql = "update hd_addresses set is_synced=? where path_type=? and address_index=? and hd_account_id=?";
         this.execUpdate(sql, new String[]{"1", Integer.toString(pathType.getValue())
                 , Integer.toString(index), Integer.toString(hdAccountId)});
     }
@@ -368,7 +368,7 @@ public abstract class AbstractHDAddressProvider extends AbstractProvider impleme
 
     @Override
     public HDAddress addressForPath(int hdAccountId, AbstractHD.PathType type, int index) {
-        String sql = "select address,pub,path_type,address_index,is_issued," +
+        String sql = "select address,redeem,path_type,address_index,is_issued," +
                 "is_synced,hd_account_id from hd_addresses" +
                 " where path_type=? and address_index=? and hd_account_id=?";
         final HDAddress[] accountAddress = {null};
@@ -458,6 +458,68 @@ public abstract class AbstractHDAddressProvider extends AbstractProvider impleme
             }
         });
         return cnt[0];
+    }
+
+    @Override
+    public void setSyncedNotComplete() {
+        String sql = "update hd_addresses set is_synced=?";
+        this.execUpdate(sql, new String[]{"0"});
+    }
+
+    @Override
+    public Tx updateOutHDAccountId(Tx tx) {
+        final Tx finalTx = tx;
+        List<String> addressList = tx.getOutAddressList();
+        if (addressList != null && addressList.size() > 0) {
+            HashSet<String> set = new HashSet<String>();
+            set.addAll(addressList);
+            StringBuilder strBuilder = new StringBuilder();
+            for (String str : set) {
+                strBuilder.append("'").append(str).append("',");
+            }
+
+            String sql = Utils.format("select address,hd_account_id from hd_addresses where address in (%s) "
+                    , strBuilder.substring(0, strBuilder.length() - 1));
+            this.execQueryLoop(sql, null, new Function<ICursor, Void>() {
+                @Nullable
+                @Override
+                public Void apply(@Nullable ICursor c) {
+                    String address = c.getString(0);
+                    int hdAccountId = c.getInt(1);
+                    for (Out out : finalTx.getOuts()) {
+                        if (Utils.compareString(out.getOutAddress(), address)) {
+                            out.setHDAccountId(hdAccountId);
+                        }
+                    }
+                    return null;
+                }
+            });
+        }
+        return tx;
+    }
+
+    @Override
+    public List<Integer> getRelatedHDAccountIdList(List<String> addresses) {
+        final List<Integer> hdAccountIdList = new ArrayList<Integer>();
+        if (addresses != null && addresses.size() > 0) {
+            HashSet<String> set = new HashSet<String>();
+            set.addAll(addresses);
+            StringBuilder strBuilder = new StringBuilder();
+            for (String str : set) {
+                strBuilder.append("'").append(str).append("',");
+            }
+            String sql = Utils.format("select distinct hd_account_id from hd_addresses where address in (%s) "
+                    , strBuilder.substring(0, strBuilder.length() - 1));
+            this.execQueryLoop(sql, null, new Function<ICursor, Void>() {
+                @Nullable
+                @Override
+                public Void apply(@Nullable ICursor c) {
+                    hdAccountIdList.add(c.getInt(0));
+                    return null;
+                }
+            });
+        }
+        return hdAccountIdList;
     }
 
     private HDAddress formatAddress(ICursor c) {

@@ -64,4 +64,8 @@ public interface IHDAddressProvider {
     List<Out> getUnspendOutByHDAccount(int hdAccountId);
 
     int unSyncedAddressCount(int hdAccountId);
+    void setSyncedNotComplete();
+
+    Tx updateOutHDAccountId(Tx tx);
+    List<Integer> getRelatedHDAccountIdList(List<String> addresses);
 }
