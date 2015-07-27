@@ -209,7 +209,7 @@ public class HDAccount extends Address {
             hdSeedId = AbstractDb.hdAccountProvider.addHDAccount(encryptedMnemonicSeed
                     .toEncryptedString(), encryptedHDSeed.toEncryptedString(), firstAddress,
                     isFromXRandom, address, externalKey.getPubKeyExtended(), internalKey
-                            .getPubKeyExtended());
+                            .getPubKeyExtended(), AbstractHD.HDAccountType.HD_HOT);
             hasSeed = true;
         }
         for (HDAccount.HDAccountAddress addr : externalAddresses) {

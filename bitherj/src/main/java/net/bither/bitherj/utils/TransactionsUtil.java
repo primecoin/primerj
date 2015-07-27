@@ -334,8 +334,7 @@ public class TransactionsUtil {
             while (hasTx) {
                 Block storedBlock = BlockChain.getInstance().getLastBlock();
                 int storeBlockHeight = storedBlock.getBlockNo();
-                desktopHDMAddress = AbstractDb.desktopTxProvider.addressForPath(desktopHDMKeychain,
-                        pathType, addressIndex);
+                desktopHDMAddress = new DesktopHDMAddress(AbstractDb.hdAddressProvider.addressForPath(desktopHDMKeychain.getHdSeedId(), pathType, addressIndex));
                 if (desktopHDMAddress == null) {
                     hasTx = false;
                     log.warn("AccountAddress", "address is null path {} ,index {}", pathType, addressIndex);
@@ -385,7 +384,7 @@ public class TransactionsUtil {
                     hasTx = true;
                 } else {
                     hasTx = false;
-                    AbstractDb.desktopTxProvider.updateSyncdForIndex(pathType, addressIndex);
+                    AbstractDb.hdAddressProvider.updateSyncedForIndex(desktopHDMKeychain.getHdSeedId(), pathType, addressIndex);
                 }
             }
             addressIndex++;

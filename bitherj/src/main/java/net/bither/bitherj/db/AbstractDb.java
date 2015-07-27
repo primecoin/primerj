@@ -127,7 +127,8 @@ public abstract class AbstractDb {
             ", hd_address text not null" +
             ", external_pub text not null" +
             ", internal_pub text not null" +
-            ", is_xrandom integer not null);";
+            ", is_xrandom integer not null" +
+            ", hd_account_type integer not null);";
 
     public static final String CREATE_HD_ACCOUNT_ADDRESSES = "create table if not exists " +
             "hd_account_addresses " +
@@ -140,12 +141,23 @@ public abstract class AbstractDb {
             ", is_synced integer not null" +
             ", primary key (address));";
 
+    public static final String CREATE_HD_ADDRESSES = "create table if not exists hd_addresses " +
+            "(hd_account_id integer not null" +
+            ", path_type integer not null" +
+            ", address_index integer not null" +
+            ", is_issued integer not null" +
+            ", address text not null" +
+            ", redeem text not null" +
+            ", is_synced integer not null" +
+            ", primary key (hd_account_id, path_type, address_index));";
 
     // hd Account index
     public static final String CREATE_HD_ACCOUNT_ADDRESS_INDEX = "create index " +
             "idx_hd_address_address on hd_account_addresses (address);";
     public static final String CREATE_HD_ACCOUNT_ACCOUNT_ID_AND_PATH_TYPE_INDEX = "create index " +
             "idx_hd_address_account_id_path on hd_account_addresses (hd_account_id, path_type);";
+    public static final String CREATE_HD_ADDRESSES_ADDRESS_INDEX = "create index " +
+            "idx_hd_addresses_address on hd_addresses (address);";
 
 
     //add hd_accont_id for outs
@@ -191,7 +203,8 @@ public abstract class AbstractDb {
     public static IHDAccountProvider hdAccountProvider;
     public static IEnterpriseHDMProvider enterpriseHDMProvider;
     public static IDesktopAddressProvider desktopAddressProvider;
-    public static IDesktopTxProvider desktopTxProvider;
+//    public static IDesktopTxProvider desktopTxProvider;
+    public static IHDAddressProvider hdAddressProvider;
 
     public void construct() {
         blockProvider = initBlockProvider();
@@ -202,7 +215,8 @@ public abstract class AbstractDb {
         hdAccountProvider = initHDAccountProvider();
         enterpriseHDMProvider = initEnterpriseHDMProvider();
         desktopAddressProvider = initEnDesktopAddressProvider();
-        desktopTxProvider = initDesktopTxProvider();
+//        desktopTxProvider = initDesktopTxProvider();
+        hdAddressProvider = initHDAddressProvider();
     }
 
     public abstract IBlockProvider initBlockProvider();
@@ -222,6 +236,8 @@ public abstract class AbstractDb {
     public abstract IDesktopAddressProvider initEnDesktopAddressProvider();
 
     public abstract IDesktopTxProvider initDesktopTxProvider();
+
+    public abstract IHDAddressProvider initHDAddressProvider();
 
     public interface Tables {
 
@@ -369,6 +385,16 @@ public abstract class AbstractDb {
         public static final String IS_ISSUED = "is_issued";
         public static final String ADDRESS = "address";
         public static final String PUB = "pub";
+        public static final String IS_SYNCED = "is_synced";
+    }
+
+    public interface HDAddressesColumns {
+        public static final String HD_ACCOUNT_ID = "hd_account_id";
+        public static final String PATH_TYPE = "path_type";
+        public static final String ADDRESS_INDEX = "address_index";
+        public static final String IS_ISSUED = "is_issued";
+        public static final String ADDRESS = "address";
+        public static final String REDEEM = "redeem";
         public static final String IS_SYNCED = "is_synced";
     }
 

@@ -27,7 +27,7 @@ import net.bither.bitherj.script.ScriptBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DesktopHDMAddress extends Address {
+public class DesktopHDMAddress extends HDAddress {
     public static interface HDMFetchOtherSignatureDelegate {
         List<TransactionSignature> getOtherSignature(int addressIndex, CharSequence password,
                                                      List<byte[]> unsignHash, Tx tx);
@@ -42,17 +42,24 @@ public class DesktopHDMAddress extends Address {
 
     private boolean isIssued;
 
-    public DesktopHDMAddress(HDMAddress.Pubs pubs, AbstractHD.PathType pathType, DesktopHDMKeychain keychain, boolean isSyncComplete) {
-        this(pubs, pubs.getAddress(), pathType, false, isSyncComplete, keychain);
+    public DesktopHDMAddress(Redeem redeem, AbstractHD.PathType pathType, int addressIndex, DesktopHDMKeychain keychain, boolean isSyncComplete) {
+        this(redeem, redeem.getAddress(), pathType, addressIndex, false, isSyncComplete, keychain);
     }
 
-    public DesktopHDMAddress(HDMAddress.Pubs pubs, String address, AbstractHD.PathType pathType, boolean isIssued, boolean isSyncComplete, DesktopHDMKeychain keychain) {
-        super(address, pubs.getMultiSigScript().getProgram(), pubs.index, isSyncComplete, true,
+    public DesktopHDMAddress(Redeem redeem, String address, AbstractHD.PathType pathType, int addressIndex, boolean isIssued, boolean isSyncComplete, DesktopHDMKeychain keychain) {
+        super(address, redeem.getMultiSigScript().getProgram(), addressIndex, isSyncComplete, true,
                 false, null);
-        this.isIssued = isIssued;
-        this.keychain = keychain;
-        this.pubs = pubs;
         this.pathType = pathType;
+        this.addressIndex = addressIndex;
+        this.isIssued = isIssued;
+        this.hdAccountId = keychain.hdSeedId;
+//        this.redeem = pubs.getMultiSigScript().getProgram();
+        this.keychain = keychain;
+//        this.pubs = pubs;
+    }
+
+    public DesktopHDMAddress(HDAddress hdAddress) {
+
     }
 
     public AbstractHD.PathType getPathType() {

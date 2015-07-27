@@ -44,8 +44,19 @@ public abstract class AbstractHD {
         public int getValue() {
             return this.value;
         }
+    }
 
+    public enum HDAccountType {
+        HD_HOT(1), HD_COLD(2), HD_MONITOR(3), HDM_HOT(4), HDM_COLD(5), HDM_MONITOR(6);
+        private int value;
 
+        HDAccountType(int value) {
+            this.value = value;
+        };
+
+        public int getValue() {
+            return this.value;
+        }
     }
 
     public static class PathTypeIndex {

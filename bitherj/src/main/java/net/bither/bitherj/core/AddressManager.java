@@ -849,8 +849,7 @@ public class AddressManager implements HDMKeychain.HDMAddressChangeDelegate,
             if (!isSendFromHDAccount(tx, txHashList) && tx.getOuts().size() > BitherjSettings
                     .COMPRESS_OUT_NUM) {
                 List<Out> outList = new ArrayList<Out>();
-                HashSet<String> addressHashSet = AbstractDb.desktopTxProvider.
-                        getBelongAccountAddresses(tx.getOutAddressList());
+                HashSet<String> addressHashSet = AbstractDb.hdAddressProvider.getBelongAccountAddresses(tx.getOutAddressList());
                 for (Out out : tx.getOuts()) {
                     if (addressHashSet.contains(out.getOutAddress())) {
                         outList.add(out);

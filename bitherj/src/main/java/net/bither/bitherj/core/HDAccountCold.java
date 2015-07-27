@@ -78,7 +78,7 @@ public class HDAccountCold extends AbstractHD {
         hdSeedId = AbstractDb.hdAccountProvider.addHDAccount(encryptedMnemonicSeed
                         .toEncryptedString(), encryptedHDSeed.toEncryptedString(), firstAddress,
                 isFromXRandom, address, externalKey.getPubKeyExtended(), internalKey
-                        .getPubKeyExtended());
+                        .getPubKeyExtended(), HDAccountType.HD_COLD);
         externalKey.wipe();
     }
 
