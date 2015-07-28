@@ -517,7 +517,7 @@ public class DesktopHDMKeychain extends AbstractHD {
             signs.add(signs1.get(i));
             signs.add(signs2.get(i));
             result.add(ScriptBuilder.createP2SHMultiSigInputScript(signs,
-                    a.getPubKey()).getProgram());
+                    a.getRedeem()).getProgram());
         }
         return result;
     }

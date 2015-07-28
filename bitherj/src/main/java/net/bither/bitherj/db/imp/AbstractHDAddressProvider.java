@@ -387,7 +387,7 @@ public abstract class AbstractHDAddressProvider extends AbstractProvider impleme
     public List<HDAddress> getSigningAddressesForInputs(int hdAccountId, List<In> inList) {
         final List<HDAddress> hdAddressList = new ArrayList<HDAddress>();
         for (In in : inList) {
-            String sql = "select a.address,a.path_type,a.address_index,a.is_synced,a.hd_account_id" +
+            String sql = "select a.address,a.path_type,a.address_index,a.is_synced,a.hd_account_id,a.redeem" +
                     " from hd_addresses a ,outs b" +
                     " where a.address=b.out_address" +
                     " and b.tx_hash=? and b.out_sn=? and a.hd_account_id=?";
