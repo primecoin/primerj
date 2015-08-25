@@ -213,7 +213,7 @@ public abstract class AbstractDb {
         addressProvider = initAddressProvider();
         hdAccountAddressProvider = initHDAccountAddressProvider();
         hdAccountProvider = initHDAccountProvider();
-        enterpriseHDMProvider = initEnterpriseHDMProvider();
+        enterpriseHDMProvider = null;
 //        desktopAddressProvider = initEnDesktopAddressProvider();
 //        desktopTxProvider = initDesktopTxProvider();
         hdAddressProvider = initHDAddressProvider();
@@ -233,9 +233,9 @@ public abstract class AbstractDb {
 
     public abstract IEnterpriseHDMProvider initEnterpriseHDMProvider();
 
-    public abstract IDesktopAddressProvider initEnDesktopAddressProvider();
-
-    public abstract IDesktopTxProvider initDesktopTxProvider();
+//    public abstract IDesktopAddressProvider initEnDesktopAddressProvider();
+//
+//    public abstract IDesktopTxProvider initDesktopTxProvider();
 
     public abstract IHDAddressProvider initHDAddressProvider();
 
