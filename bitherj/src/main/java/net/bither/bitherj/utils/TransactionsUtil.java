@@ -343,14 +343,20 @@ public class TransactionsUtil {
     private static void getTxForDesktopHDM(DesktopHDMKeychain desktopHDMKeychain) throws Exception {
         for (AbstractHD.PathType pathType : AbstractHD.PathType.values()) {
             DesktopHDMAddress desktopHDMAddress;
-            boolean hasTx = true;
+//            boolean hasTx = true;
+            int unusedAddressCnt = 0; //HDAccount.MaxUnusedNewAddressCount
+            int maxUnusedAddressCount = 0;
+            if (pathType.equals(AbstractHD.PathType.EXTERNAL_ROOT_PATH)) {
+                maxUnusedAddressCount = HDAccount.MaxUnusedNewAddressCount;
+            }
             int addressIndex = 0;
-            while (hasTx) {
+            while (unusedAddressCnt <= maxUnusedAddressCount) {
                 Block storedBlock = BlockChain.getInstance().getLastBlock();
                 int storeBlockHeight = storedBlock.getBlockNo();
                 HDAddress address = AbstractDb.hdAddressProvider.addressForPath(desktopHDMKeychain.getHdSeedId(), pathType, addressIndex);
                 if (address == null) {
-                    hasTx = false;
+//                    hasTx = false;
+                    unusedAddressCnt += 1;
                     log.warn("AccountAddress", "address is null path {} ,index {}", pathType, addressIndex);
                     continue;
                 }
@@ -396,16 +402,16 @@ public class TransactionsUtil {
                         desktopHDMKeychain.updateIssuedInternalIndex(addressIndex);
                     }
                     desktopHDMKeychain.supplyEnoughKeys(false);
-                    hasTx = true;
+//                    hasTx = true;
+                    unusedAddressCnt = 0;
                 } else {
-                    hasTx = false;
-                    AbstractDb.hdAddressProvider.updateSyncedForIndex(desktopHDMKeychain.getHdSeedId(), pathType, addressIndex);
+//                    hasTx = false;
+                    unusedAddressCnt += 1;
                 }
+                addressIndex++;
             }
-            addressIndex++;
+            AbstractDb.hdAddressProvider.updateSyncedForIndex(desktopHDMKeychain.getHdSeedId(), pathType, addressIndex - 1);
         }
-
-
     }
 
     private static void getTxForAddress() throws Exception {

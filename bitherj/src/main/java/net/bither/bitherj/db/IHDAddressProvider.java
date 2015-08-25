@@ -68,4 +68,6 @@ public interface IHDAddressProvider {
 
     Tx updateOutHDAccountId(Tx tx);
     List<Integer> getRelatedHDAccountIdList(List<String> addresses);
+
+    boolean requestNewReceivingAddress(int hdAccountId);
 }
