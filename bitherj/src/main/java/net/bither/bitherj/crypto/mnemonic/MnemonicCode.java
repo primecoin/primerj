@@ -33,7 +33,6 @@ import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,8 +101,8 @@ public abstract class MnemonicCode {
         if (this.wordList.size() != 2048) {
             throw new IllegalArgumentException("input stream did not contain 2048 words");
         }
-        
-        wordListDigest = null
+
+        wordListDigest = null;
         // If a wordListDigest is supplied check to make sure it matches.
         if (wordListDigest != null) {
             byte[] digest = md.digest();
@@ -164,7 +163,7 @@ public abstract class MnemonicCode {
         int wordindex = 0;
         for (String word : words) {
             // Find the words index in the wordlist.
-            int ndx = Collections.binarySearch(this.wordList, word);
+            int ndx = this.wordList.indexOf(word);
             if (ndx < 0) {
                 throw new MnemonicException.MnemonicWordException(word);
             }
