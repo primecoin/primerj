@@ -102,7 +102,8 @@ public abstract class MnemonicCode {
         if (this.wordList.size() != 2048) {
             throw new IllegalArgumentException("input stream did not contain 2048 words");
         }
-
+        
+        wordListDigest = null
         // If a wordListDigest is supplied check to make sure it matches.
         if (wordListDigest != null) {
             byte[] digest = md.digest();
