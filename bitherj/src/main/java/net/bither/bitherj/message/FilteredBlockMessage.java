@@ -74,7 +74,7 @@ public class FilteredBlockMessage extends Message {
         System.arraycopy(bytes, 0, headerBytes, 0, BlockMessage.HEADER_SIZE+size+1);
 
 
-        block = new Block(headerBytes,BlockMessage.HEADER_SIZE + size + 1);
+        block = new Block(headerBytes);
         block.calculateHash(headerBytes, 0, BlockMessage.HEADER_SIZE + size + 1);
 
         merkleTree = new PartialMerkleTree(bytes, BlockMessage.HEADER_SIZE + size + 1);

@@ -62,11 +62,7 @@ public class QRCodeEnodeUtil {
                     && (str.indexOf(QRCodeUtil.XRANDOM_FLAG) == 0));
             boolean checkUnCompressed = str.length() == 130 || ((str.length() == 131)
                     && (str.indexOf(QRCodeUtil.XRANDOM_FLAG) == 0));
-            if(str.indexOf(QRCodeUtil.XRANDOM_FLAG) == 0){
-                str = str.substring(QRCodeUtil.XRANDOM_FLAG.length());
-            }
             org.spongycastle.math.ec.ECPoint ecPoint = ECKey.checkPoint(Utils.hexStringToByteArray(str));
-
             if (ecPoint == null || !ecPoint.isValid()) {
                 return false;
             }
@@ -91,7 +87,7 @@ public class QRCodeEnodeUtil {
             org.spongycastle.math.ec.ECPoint ecPoint = ECKey.checkPoint(pub);
             if (ecPoint != null && ecPoint.isValid()) {
                 String addString = Utils.toAddress(Utils.sha256hash160(pub));
-                Address address = new Address(addString, pub, null, false, isXRandom);
+                Address address = new Address(addString, pub, null, isXRandom);
                 wallets.add(address);
             }
         }

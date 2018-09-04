@@ -1,18 +1,18 @@
 /*
-* Copyright 2014 http://Bither.net
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2014 http://Bither.net
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package net.bither.bitherj.core;
 
@@ -68,7 +68,7 @@ public class Block extends Message {
     public static final int HEADER_SIZE = 80;
 
     private int blockNo;
-    private byte[] blockHash;
+    public byte[] blockHash;
     private byte[] blockRoot;
     private long blockVer;
     private long blockBits;
@@ -127,9 +127,10 @@ public class Block extends Message {
         this.blockNonce = nonce;
         this.blockNo = height;
         this.blockHash = calculateHash();
-
-
     }
+
+
+
 
     public String toString() {
 //new Date(this.blockTime)+
@@ -150,6 +151,7 @@ public class Block extends Message {
     public void calculateHash(byte[] newBytes, int offset, int length) {
         blockHash = Utils.doubleDigest(newBytes, offset, length);
     }
+
 
     /**
      * Returns the hash of the block (which for a valid, solved block should be below the target) in the form seen on
@@ -172,6 +174,16 @@ public class Block extends Message {
         if (blockHash == null)
             blockHash = calculateHash();
         return blockHash;
+    }
+
+    public String blockEncodeHash;
+
+    public String getBlockEncodeHash() {
+        return blockEncodeHash;
+    }
+
+    public void setBlockEncodeHash(String blockEncodeHash) {
+        this.blockEncodeHash = blockEncodeHash;
     }
 
     public void setBlockHash(byte[] blockHash) {
@@ -271,9 +283,7 @@ public class Block extends Message {
 
     public void verifyDifficultyFromPreviousBlock(Block prev) {
         // checkState(lock.isHeldByCurrentThread());
-        if(true){
-            return;//todo no verify
-        }
+
         // Is this supposed to be a difficulty transition point?
         if ((prev.getBlockNo() + 1) % BitherjSettings.BLOCK_DIFFICULTY_INTERVAL != 0) {
 
@@ -340,11 +350,12 @@ public class Block extends Message {
     }
 
     public void verifyDifficultyFromPreviousBlock(Block prev, int transitionTime) {
-        // checkState(lock.isHeldByCurrentThread());
+
         if(true){
-            //todo:not verifyDifficultyFromPreviousBlock
-            return;
+            return;//todo no verify
         }
+        // checkState(lock.isHeldByCurrentThread());
+
         // Is this supposed to be a difficulty transition point?
         if ((prev.getBlockNo() + 1) % BitherjSettings.BLOCK_DIFFICULTY_INTERVAL != 0) {
 
@@ -447,7 +458,6 @@ public class Block extends Message {
         //
         // Firstly we need to ensure this block does in fact represent real work done. If the difficulty is high
         // enough, it's probably been done by the network.
-
 //        checkProofOfWork(true);
 //        checkTimestamp(); todo:verifyHeader
     }
@@ -692,7 +702,11 @@ public class Block extends Message {
         headerBytesValid = !headerParsed || false && length >= HEADER_SIZE;
 
         parseHeader();
-        //parseTransactions();
+
+    }
+
+    public void parseBlockTransactions() {
+        parseTransactions();
         length = cursor - offset;
     }
 

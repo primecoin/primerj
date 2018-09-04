@@ -69,11 +69,9 @@ public class Peer extends PeerSocketHandler {
 
     private static final int BLOOMFILTER_UPDATE_BLOCK_INTERVAL = 100;
 
-    private static final int GET_BLOCK_DATA_PIECE_SIZE = 1;
+    private static final int GET_BLOCK_DATA_PIECE_SIZE = 5;
 
-    private static final int MAX_PEER_MANAGER_WAITING_TASK_COUNT = 1;
-
-    private static final int RELAY_BLOCK_COUNT_WHEN_SYNC = 1;
+    private static final int MAX_PEER_MANAGER_WAITING_TASK_COUNT = 0;
 
     private static final int PEER_MANAGER_MAX_TASK_CHECKING_INTERVAL = 100;
 
@@ -511,10 +509,10 @@ public class Peer extends PeerSocketHandler {
                 this.syncBlockHashes.remove(new Sha256Hash(block.getBlockHash()));
                 this.syncBlocks.add(block);
 
-                if (this.syncBlockHashes.size() == 0 && this.syncBlocks.size() > 0) {
+                if (this.syncBlockHashes.size() == 0) {
                     PeerManager.instance().relayedBlocks(this, this.syncBlocks);
                     this.syncBlocks.clear();
-                } else if (this.syncBlocks.size() >= RELAY_BLOCK_COUNT_WHEN_SYNC) {
+                } else if (this.syncBlocks.size() >= 1) {
                     PeerManager.instance().relayedBlocks(this, this.syncBlocks);
                     this.syncBlocks.clear();
                 }
@@ -570,10 +568,10 @@ public class Peer extends PeerSocketHandler {
                     this.syncBlockHashes.remove(new Sha256Hash(block.getBlockHash()));
                     this.syncBlocks.add(block);
 
-                    if (this.syncBlockHashes.size() == 0 && this.syncBlocks.size() > 0) {
+                    if (this.syncBlockHashes.size() == 0) {
                         PeerManager.instance().relayedBlocks(this, this.syncBlocks);
                         this.syncBlocks.clear();
-                    } else if (this.syncBlocks.size() >= RELAY_BLOCK_COUNT_WHEN_SYNC) {
+                    } else if (this.syncBlocks.size() >= 1) {
                         PeerManager.instance().relayedBlocks(this, this.syncBlocks);
                         this.syncBlocks.clear();
                     }
@@ -806,7 +804,6 @@ public class Peer extends PeerSocketHandler {
         }
     }
 
-    //ping值
     private void processPong(PongMessage m) {
         // Iterates over a snapshot of the list, so we can run unlocked here.
         if (m.getNonce() == nonce) {

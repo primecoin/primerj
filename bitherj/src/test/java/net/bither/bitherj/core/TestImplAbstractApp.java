@@ -61,7 +61,7 @@ public class TestImplAbstractApp extends AbstractApp {
 
             @Override
             public BitherjSettings.ApiConfig getApiConfig() {
-                return BitherjSettings.ApiConfig.BITHER_NET;
+                return BitherjSettings.ApiConfig.BLOCKCHAIN_INFO;
             }
 
             @Override

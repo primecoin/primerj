@@ -40,15 +40,11 @@ public class QRCodeUtil {
 
     }
 
-
-    public static final String QR_CODE_SECONDARY_SPLIT_ESCAPE = "\\$";
-    public static final String QR_CODE_SECONDARY_SPLIT = "$";
     public static final String QR_CODE_SPLIT = "/";
     public static final String XRANDOM_FLAG = "+";
     public static final String OLD_QR_CODE_SPLIT = ":";
     public static final String HDM_QR_CODE_FLAG = "-";
-    public static final String Enterprise_HDM_QR_CODE_FLAG = "?";
-    public static final String HD_MONITOR_QR_PREFIX = "BitherHD:";
+    public static final String HD_QR_CODE_FLAG = "%";
 
 
     public static String[] splitString(String str) {
@@ -111,7 +107,7 @@ public class QRCodeUtil {
     }
 
     public static boolean verifyBitherQRCode(String text) {
-        Pattern pattern = Pattern.compile("[^0-9a-zA-Z/\\+\\$%-]");
+        Pattern pattern = Pattern.compile("[^0-9a-zA-Z/\\+%-]");
         Matcher matcher = pattern.matcher(text);
         boolean verifyNewVersion = true;
         boolean verifyOldVersion = true;
@@ -126,24 +122,26 @@ public class QRCodeUtil {
 
     public static List<String> getQrCodeStringList(String str) {
         List<String> stringList = new ArrayList<String>();
-        int strLeng = str.length();
-        int num = getNumOfQrCodeString(strLeng);
-        int pageSize = (strLeng + (num - 1)) / num;
+        int num = getNumOfQrCodeString(str.length());
+        int sumLength = str.length() + num * 6;
+        int pageSize = sumLength / num;
         for (int i = 0;
              i < num;
              i++) {
             int start = i * pageSize;
             int end = (i + 1) * pageSize;
-            if (start > strLeng - 1) {
+            if (start > str.length() - 1) {
                 continue;
             }
-            if (end > strLeng) {
-                end = strLeng;
+            if (end > str.length()) {
+                end = str.length();
             }
             String splitStr = str.substring(start, end);
             String pageString = "";
-            pageString = Integer.toString(num - 1) + QR_CODE_SPLIT
-                    + Integer.toString(i) + QR_CODE_SPLIT;
+            if (num > 1) {
+                pageString = Integer.toString(num - 1) + QR_CODE_SPLIT
+                        + Integer.toString(i) + QR_CODE_SPLIT;
+            }
             stringList.add(pageString + splitStr);
         }
         return stringList;

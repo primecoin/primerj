@@ -145,7 +145,7 @@ public class HDMKeychain extends AbstractHD {
             }
             for (HDMAddress.Pubs p : pubs) {
                 if (p.isCompleted()) {
-                    as.add(new HDMAddress(p, this, false));
+                    as.add(new HDMAddress(p, this));
                 } else {
                     uncompPubs.add(p);
                 }
@@ -247,7 +247,7 @@ public class HDMKeychain extends AbstractHD {
                 fetchDelegate.completeRemotePublicKeys(password, pubs);
                 for (HDMAddress.Pubs p : pubs) {
                     if (p.isCompleted()) {
-                        as.add(new HDMAddress(p, this, true));
+                        as.add(new HDMAddress(p, this));
                     } else {
                         AbstractDb.addressProvider.setHDMPubsRemote(getHdSeedId(), p.index,
                                 p.remote);
@@ -527,15 +527,16 @@ public class HDMKeychain extends AbstractHD {
         }
     }
 
-    public static boolean checkPassword(MnemonicCode mnemonicCode, String keysString, CharSequence password) throws
+    public static boolean checkPassword(String keysString, CharSequence password) throws
             MnemonicException.MnemonicLengthException {
         String[] passwordSeeds = QRCodeUtil.splitOfPasswordSeed(keysString);
         String address = Base58.hexToBase58WithAddress(passwordSeeds[0]);
         String encreyptString = Utils.joinString(new String[]{passwordSeeds[1], passwordSeeds[2],
                 passwordSeeds[3]}, QRCodeUtil.QR_CODE_SPLIT);
         byte[] seed = new EncryptedData(encreyptString).decrypt(password);
+        MnemonicCode mnemonic = MnemonicCode.instance();
 
-        byte[] s = mnemonicCode.toSeed(mnemonicCode.toMnemonic(seed), "");
+        byte[] s = mnemonic.toSeed(mnemonic.toMnemonic(seed), "");
 
         DeterministicKey master = HDKeyDerivation.createMasterPrivateKey(s);
 
@@ -579,7 +580,7 @@ public class HDMKeychain extends AbstractHD {
                 }
                 for (HDMAddress.Pubs p : pubs) {
                     if (p.isCompleted()) {
-                        as.add(new HDMAddress(p, this, false));
+                        as.add(new HDMAddress(p, this));
                     } else {
                         uncompPubs.add(p);
                     }

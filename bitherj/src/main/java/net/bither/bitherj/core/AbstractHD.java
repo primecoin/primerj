@@ -48,12 +48,6 @@ public abstract class AbstractHD {
 
     }
 
-    public static class PathTypeIndex {
-        public PathType pathType;
-        public int index;
-    }
-
-
     public static PathType getTernalRootType(int value) {
         switch (value) {
             case 0:
@@ -67,7 +61,6 @@ public abstract class AbstractHD {
     protected transient byte[] hdSeed;
     protected int hdSeedId = -1;
     protected boolean isFromXRandom;
-    protected MnemonicCode mnemonicCode = MnemonicCode.instance();
 
     private static final Logger log = LoggerFactory.getLogger(AbstractHD.class);
 
@@ -117,7 +110,7 @@ public abstract class AbstractHD {
     private void initHDSeedFromMnemonicSeed(CharSequence password) throws MnemonicException
             .MnemonicLengthException {
         decryptMnemonicSeed(password);
-        hdSeed = seedFromMnemonic(mnemonicSeed, mnemonicCode);
+        hdSeed = seedFromMnemonic(mnemonicSeed);
         wipeMnemonicSeed();
         AbstractDb.addressProvider.updateEncrypttMnmonicSeed(getHdSeedId(), new EncryptedData(hdSeed,
                 password, isFromXRandom).toEncryptedString());
@@ -152,23 +145,6 @@ public abstract class AbstractHD {
         return address;
     }
 
-    public DeterministicKey getInternalKey(int index, CharSequence password) {
-        try {
-            DeterministicKey master = masterKey(password);
-            DeterministicKey accountKey = getAccount(master);
-            DeterministicKey externalChainRoot = getChainRootKey(accountKey, PathType.INTERNAL_ROOT_PATH);
-            DeterministicKey key = externalChainRoot.deriveSoftened(index);
-            master.wipe();
-            accountKey.wipe();
-            externalChainRoot.wipe();
-            return key;
-        } catch (KeyCrypterException e) {
-            throw new PasswordException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public DeterministicKey getExternalKey(int index, CharSequence password) {
         try {
             DeterministicKey master = masterKey(password);
@@ -179,18 +155,6 @@ public abstract class AbstractHD {
             accountKey.wipe();
             externalChainRoot.wipe();
             return key;
-        } catch (KeyCrypterException e) {
-            throw new PasswordException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected byte[] getMasterPubKeyExtended(CharSequence password) {
-        try {
-            DeterministicKey master = masterKey(password);
-            DeterministicKey accountKey = getAccount(master);
-            return accountKey.getPubKeyExtended();
         } catch (KeyCrypterException e) {
             throw new PasswordException(e);
         } catch (Exception e) {
@@ -216,9 +180,9 @@ public abstract class AbstractHD {
         return hdSeedId;
     }
 
-    public static final byte[] seedFromMnemonic(byte[] mnemonicSeed, MnemonicCode... mnemonicCode) throws MnemonicException
+    public static final byte[] seedFromMnemonic(byte[] mnemonicSeed) throws MnemonicException
             .MnemonicLengthException {
-        MnemonicCode mnemonic = mnemonicCode.length > 0 ? mnemonicCode[0] : MnemonicCode.instance();
+        MnemonicCode mnemonic = MnemonicCode.instance();
         return mnemonic.toSeed(mnemonic.toMnemonic(mnemonicSeed), "");
     }
 

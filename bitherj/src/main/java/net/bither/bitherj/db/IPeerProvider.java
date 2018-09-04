@@ -24,17 +24,22 @@ import java.util.List;
 
 public interface IPeerProvider {
 
-//    ArrayList<InetAddress> exists(ArrayList<InetAddress> peerAddresses);
 
-    void addPeers(List<Peer> items);
+    public void deletePeersNotInAddresses(List<InetAddress> peerAddrsses);
 
-    void removePeer(InetAddress address);
+    public ArrayList<InetAddress> exists(ArrayList<InetAddress> peerAddresses);
 
-    void connectSucceed(InetAddress address);
+    public void addPeers(List<Peer> items);
 
-    List<Peer> getPeersWithLimit(int limit);
+    public void removePeer(InetAddress address);
 
-    void cleanPeers();
+    public void conncetFail(InetAddress address);
 
-    void recreate();
+    public void connectSucceed(InetAddress address);
+
+    public List<Peer> getPeersWithLimit(int limit);
+
+    public void cleanPeers();
+
+    public void recreate();
 }

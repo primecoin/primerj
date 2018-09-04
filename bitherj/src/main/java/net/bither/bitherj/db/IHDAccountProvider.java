@@ -14,33 +14,68 @@
  * limitations under the License.
  */
 
+
 package net.bither.bitherj.db;
 
+import net.bither.bitherj.core.AbstractHD;
+import net.bither.bitherj.core.HDAccount;
+import net.bither.bitherj.core.In;
+import net.bither.bitherj.core.Out;
+import net.bither.bitherj.core.Tx;
+
+import java.util.HashSet;
 import java.util.List;
 
 public interface IHDAccountProvider {
 
-    int addHDAccount(String encryptedMnemonicSeed, String encryptSeed
-            , String firstAddress, boolean isXrandom, String addressOfPS
-            , byte[] externalPub, byte[] internalPub);
 
-    int addMonitoredHDAccount(String firstAddress, boolean isXrandom, byte[] externalPub, byte[] internalPub);
+    public void addAddress(List<HDAccount.HDAccountAddress> hdAccountAddresses);
 
-    boolean hasMnemonicSeed(int hdAccountId);
+    public int issuedIndex(AbstractHD.PathType pathType);
 
-    String getHDFirstAddress(int hdSeedId);
+    public int allGeneratedAddressCount(AbstractHD.PathType pathType);
 
-    byte[] getExternalPub(int hdSeedId);
+    public void updateIssuedIndex(AbstractHD.PathType pathType, int index);
 
-    byte[] getInternalPub(int hdSeedId);
+    public String externalAddress();
 
-    String getHDAccountEncryptSeed(int hdSeedId);
 
-    String getHDAccountEncryptMnemonicSeed(int hdSeedId);
+    public HashSet<String> getBelongAccountAddresses(List<String> addressList);
 
-    boolean hdAccountIsXRandom(int seedId);
 
-    List<Integer> getHDAccountSeeds();
+    public HDAccount.HDAccountAddress addressForPath(AbstractHD.PathType type, int index);
 
-    boolean isPubExist(byte[] externalPub, byte[] internalPub);
+    public List<byte[]> getPubs(AbstractHD.PathType pathType);
+
+    public List<HDAccount.HDAccountAddress> belongAccount(List<String> addresses);
+
+    public void updateSyncdComplete(HDAccount.HDAccountAddress address);
+
+    public void setSyncdNotComplete();
+
+    public int unSyncedAddressCount();
+
+    public void updateSyncdForIndex(AbstractHD.PathType pathType, int index);
+
+    public List<HDAccount.HDAccountAddress> getSigningAddressesForInputs(List<In> inList);
+
+    public int hdAccountTxCount();
+
+    public long getHDAccountConfirmedBanlance(int hdAccountId);
+
+    public List<Tx> getHDAccountUnconfirmedTx();
+
+    public long sentFromAccount(int hdAccountId, byte[] txHash);
+
+    public List<Tx> getTxAndDetailByHDAccount(int page);
+
+    public List<Tx> getTxAndDetailByHDAccount();
+
+    public List<Out> getUnspendOutByHDAccount(int hdAccountId);
+
+    public List<Tx> getRecentlyTxsByAccount(int greateThanBlockNo, int limit);
+
+    public int getUnspendOutCountByHDAccountWithPath(int hdAccountId, AbstractHD.PathType pathType);
+
+    public List<Out> getUnspendOutByHDAccountWithPath(int hdAccountId, AbstractHD.PathType pathType);
 }

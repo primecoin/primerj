@@ -35,6 +35,7 @@ import java.util.List;
  * because you have a freshly created wallet with no keys.
  */
 public class HeadersMessage extends Message {
+
     private static final Logger log = LoggerFactory.getLogger(HeadersMessage.class);
 
     // The main client will never send us more than this number of headers.
@@ -76,8 +77,7 @@ public class HeadersMessage extends Message {
 
         long numHeaders = readVarInt();
         if (numHeaders > MAX_HEADERS)
-            throw new ProtocolException("Too many headers: got " + numHeaders + " which is larger than " +
-                    MAX_HEADERS);
+            throw new ProtocolException("Too many headers: got " + numHeaders + " which is larger than " + MAX_HEADERS);
 
         blockHeaders = new ArrayList<Block>();
 

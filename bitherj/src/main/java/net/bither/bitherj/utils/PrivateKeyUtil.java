@@ -20,7 +20,6 @@ import net.bither.bitherj.BitherjSettings;
 import net.bither.bitherj.core.Address;
 import net.bither.bitherj.core.AddressManager;
 import net.bither.bitherj.core.HDAccount;
-import net.bither.bitherj.core.HDAccountCold;
 import net.bither.bitherj.core.HDMKeychain;
 import net.bither.bitherj.crypto.DumpedPrivateKey;
 import net.bither.bitherj.crypto.ECKey;
@@ -32,8 +31,6 @@ import net.bither.bitherj.crypto.KeyCrypterScrypt;
 import net.bither.bitherj.crypto.PasswordSeed;
 import net.bither.bitherj.crypto.SecureCharSequence;
 import net.bither.bitherj.crypto.bip38.Bip38;
-import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
-import net.bither.bitherj.crypto.mnemonic.MnemonicWordList;
 import net.bither.bitherj.exception.AddressFormatException;
 import net.bither.bitherj.qrcode.QRCodeUtil;
 import net.bither.bitherj.qrcode.SaltForQRCode;
@@ -101,7 +98,7 @@ public class PrivateKeyUtil {
         EncryptedPrivateKey epk = new EncryptedPrivateKey(Utils.hexStringToByteArray
                 (strs[1]), Utils.hexStringToByteArray(strs[0]));
         byte[] decrypted = crypter.decrypt(epk, crypter.deriveKey(password));
-        
+
         ECKey ecKey = null;
         SecureCharSequence privateKeyText = null;
         if (needPrivteKeyText) {
@@ -209,7 +206,7 @@ public class PrivateKeyUtil {
                 content += QRCodeUtil.QR_CODE_SPLIT + keychain.getQRCodeFullEncryptPrivKey();
             }
         }
-        HDAccount hdAccount = AddressManager.getInstance().getHDAccountHot();
+        HDAccount hdAccount = AddressManager.getInstance().getHdAccount();
         if (hdAccount != null) {
             if (Utils.isEmpty(content)) {
                 content += hdAccount.getQRCodeFullEncryptPrivKey();
@@ -217,14 +214,7 @@ public class PrivateKeyUtil {
                 content += QRCodeUtil.QR_CODE_SPLIT + hdAccount.getQRCodeFullEncryptPrivKey();
             }
         }
-        HDAccountCold hdAccountCold = AddressManager.getInstance().getHDAccountCold();
-        if (hdAccountCold != null) {
-            if (Utils.isEmpty(content)) {
-                content += hdAccountCold.getQRCodeFullEncryptPrivKey();
-            } else {
-                content += QRCodeUtil.QR_CODE_SPLIT + hdAccountCold.getQRCodeFullEncryptPrivKey();
-            }
-        }
+
         return content;
     }
 
@@ -251,30 +241,7 @@ public class PrivateKeyUtil {
             }
         }
         return hdmKeychain;
-    }
 
-    public static HDAccountCold getHDAccountCold(MnemonicCode mnemonicCode, String str, CharSequence password) {
-        HDAccountCold hdAccountCold = null;
-        String[] strs = QRCodeUtil.splitOfPasswordSeed(str);
-        if (strs.length % 3 != 0) {
-            log.error("Backup: PrivateKeyFromString format error");
-            return null;
-        }
-        for (int i = 0;
-             i < strs.length;
-             i += 3) {
-            int hdQrCodeFlagLength = MnemonicWordList.getHdQrCodeFlagLength(strs[i], mnemonicCode.getMnemonicWordList());
-            if (hdQrCodeFlagLength > 0) {
-                try {
-                    String encryptedString = strs[i].substring(hdQrCodeFlagLength) + QRCodeUtil.QR_CODE_SPLIT + strs[i + 1]
-                            + QRCodeUtil.QR_CODE_SPLIT + strs[i + 2];
-                    hdAccountCold = new HDAccountCold(mnemonicCode, new EncryptedData(encryptedString), password);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return hdAccountCold;
     }
 
     public static List<Address> getECKeysFromBackupString(String str, CharSequence password) {
@@ -290,9 +257,6 @@ public class PrivateKeyUtil {
             if (strs[i].indexOf(QRCodeUtil.HDM_QR_CODE_FLAG) == 0) {
                 continue;
             }
-            if (strs[i].indexOf(MnemonicCode.instance().getMnemonicWordList().getHdQrCodeFlag()) == 0){
-                continue;
-            }
             String encryptedString = strs[i] + QRCodeUtil.QR_CODE_SPLIT + strs[i + 1]
                     + QRCodeUtil.QR_CODE_SPLIT + strs[i + 2];
             ECKey key = getECKeyFromSingleString(encryptedString, password);
@@ -301,7 +265,7 @@ public class PrivateKeyUtil {
                 return null;
             } else {
                 Address address = new Address(key.toAddress(), key.getPubKey(), encryptedString,
-                        false, key.isFromXRandom());
+                        key.isFromXRandom());
                 key.clearPrivateKey();
                 list.add(address);
             }
@@ -420,24 +384,13 @@ public class PrivateKeyUtil {
                 e.printStackTrace();
             }
         }
-        HDAccount hdAccount = AddressManager.getInstance().getHDAccountHot();
+        HDAccount hdAccount = AddressManager.getInstance().getHdAccount();
         if (hdAccount != null) {
             try {
                 String address = hdAccount.getFirstAddressFromDb();
-                backupString += MnemonicCode.instance().getMnemonicWordList().getHdQrCodeFlag() + Base58.bas58ToHexWithAddress(address)
+                backupString += QRCodeUtil.HD_QR_CODE_FLAG + Base58.bas58ToHexWithAddress(address)
                         + QRCodeUtil.QR_CODE_SPLIT
                         + hdAccount.getFullEncryptPrivKey() + BACKUP_KEY_SPLIT_MUTILKEY_STRING;
-            } catch (AddressFormatException e) {
-                e.printStackTrace();
-            }
-        }
-        HDAccountCold hdAccountCold = AddressManager.getInstance().getHDAccountCold();
-        if (hdAccountCold != null) {
-            try {
-                String address = hdAccountCold.getFirstAddressFromDb();
-                backupString += MnemonicCode.instance().getMnemonicWordList().getHdQrCodeFlag() + Base58.bas58ToHexWithAddress
-                        (address) + QRCodeUtil.QR_CODE_SPLIT + hdAccountCold
-                        .getFullEncryptPrivKey() + BACKUP_KEY_SPLIT_MUTILKEY_STRING;
             } catch (AddressFormatException e) {
                 e.printStackTrace();
             }

@@ -5,7 +5,6 @@ import net.bither.bitherj.core.HDMAddress;
 import net.bither.bitherj.core.HDMBId;
 import net.bither.bitherj.core.HDMKeychain;
 import net.bither.bitherj.crypto.PasswordSeed;
-import net.bither.bitherj.db.imp.base.IDb;
 
 import java.util.List;
 import java.util.Map;
@@ -14,85 +13,106 @@ import javax.annotation.Nullable;
 
 public interface IAddressProvider {
     // password
-    boolean changePassword(CharSequence oldPassword, CharSequence newPassword);
+    public boolean changePassword(CharSequence oldPassword, CharSequence newPassword);
 
-    PasswordSeed getPasswordSeed();
+    public PasswordSeed getPasswordSeed();
 
-    boolean hasPasswordSeed();
+    public boolean hasPasswordSeed();
 
-    // hdm
-    List<Integer> getHDSeeds();
+    //hd
 
-    String getEncryptMnemonicSeed(int hdSeedId);
+    public int addHDAccount(String encryptedMnemonicSeed, String encryptSeed
+            , String firstAddress, boolean isXrandom, String addressOfPS
+            , byte[] externalPub, byte[] internalPub);
 
-    String getEncryptHDSeed(int hdSeedId);
+    public String getHDFristAddress(int hdSeedId);
+
+    public byte[] getExternalPub(int hdSeedId);
+
+    public byte[] getInternalPub(int hdSeedId);
+
+    public String getHDAccountEncryptSeed(int hdSeedId);
+
+    public String getHDAccountEncryptMnmonicSeed(int hdSeedId);
+
+    public boolean hdAccountIsXRandom(int seedId);
+
+    public List<Integer> getHDAccountSeeds();
+
+    public List<Integer> getHDSeeds();
+
+    public String getEncryptMnemonicSeed(int hdSeedId);
+
+    public String getEncryptHDSeed(int hdSeedId);
+
+    public void updateEncrypttMnmonicSeed(int hdSeedId, String encryptMnmonicSeed);
+
+    public boolean isHDSeedFromXRandom(int hdSeedId);
+
+    public String getHDMFristAddress(int hdSeedId);
+
+    public String getSingularModeBackup(int hdSeedId);
+
+    public void setSingularModeBackup(int hdSeedId, String singularModeBackup);
+
+    public int addHDKey(String encryptedMnemonicSeed, String encryptHdSeed, String firstAddress, boolean isXrandom, String addressOfPS);
+
+    public HDMBId getHDMBId();
 
 
-    void updateEncrypttMnmonicSeed(int hdSeedId, String encryptMnmonicSeed);
-
-    boolean isHDSeedFromXRandom(int hdSeedId);
-
-    String getHDMFristAddress(int hdSeedId);
-
-    String getSingularModeBackup(int hdSeedId);
-
-    void setSingularModeBackup(int hdSeedId, String singularModeBackup);
-
-    int addHDKey(String encryptedMnemonicSeed, String encryptHdSeed, String firstAddress, boolean isXrandom, String addressOfPS);
-
-    int addEnterpriseHDKey(String encryptedMnemonicSeed, String encryptHdSeed, String firstAddress, boolean isXrandom, String addressOfPS);
-    HDMBId getHDMBId();
+    public void addAndUpdateHDMBId(HDMBId bitherId, String addressOfPS);
 
 
-    void addAndUpdateHDMBId(HDMBId bitherId, String addressOfPS);
+    public List<HDMAddress> getHDMAddressInUse(HDMKeychain keychain);
+
+    public void prepareHDMAddresses(int hdSeedId, List<HDMAddress.Pubs> pubs);
+
+    public List<HDMAddress.Pubs> getUncompletedHDMAddressPubs(int hdSeedId, int count);
+
+    public int maxHDMAddressPubIndex(int hdSeedId);//including completed and uncompleted
+
+    public void recoverHDMAddresses(int hdSeedId, List<HDMAddress> addresses);
 
 
-    List<HDMAddress> getHDMAddressInUse(HDMKeychain keychain);
+    public void completeHDMAddresses(int hdSeedId, List<HDMAddress> addresses);
 
-    void prepareHDMAddresses(int hdSeedId, List<HDMAddress.Pubs> pubs);
+    public void setHDMPubsRemote(int hdSeedId, int index, byte[] remote);
 
-    List<HDMAddress.Pubs> getUncompletedHDMAddressPubs(int hdSeedId, int count);
+    public int uncompletedHDMAddressCount(int hdSeedId);
 
-    int maxHDMAddressPubIndex(int hdSeedId);//including completed and uncompleted
-
-    void recoverHDMAddresses(int hdSeedId, List<HDMAddress> addresses);
-
-
-    void completeHDMAddresses(int hdSeedId, List<HDMAddress> addresses);
-
-    void setHDMPubsRemote(int hdSeedId, int index, byte[] remote);
-
-    int uncompletedHDMAddressCount(int hdSeedId);
-
-    void syncComplete(int hdSeedId, int hdSeedIndex);
+    public void syncComplete(int hdSeedId, int hdSeedIndex);
 
 
     //normal
-    List<Address> getAddresses();
+    public List<Address> getAddresses();
 
-    String getEncryptPrivateKey(String address);
+    public String getEncryptPrivateKey(String address);
 
-    void addAddress(Address address);
+    public void addAddress(Address address);
 
-    void updatePrivateKey(String address, String encryptPriv);
+    public void updatePrivateKey(String address, String encryptPriv);
 
-    void removeWatchOnlyAddress(Address address);
+    public void removeWatchOnlyAddress(Address address);
 
-    void trashPrivKeyAddress(Address address);
+    public void trashPrivKeyAddress(Address address);
 
-    void restorePrivKeyAddress(Address address);
+    public void restorePrivKeyAddress(Address address);
 
-    void updateSyncComplete(Address address);
+    public void updateSyncComplete(Address address);
 
     // alias
-    Map<String, String> getAliases();
+    public String getAlias(String address);
 
-    void updateAlias(String address, @Nullable String alias);
+    public Map<String, String> getAliases();
+
+    public void updateAlias(String address, @Nullable String alias);
 
     //vanity_len
-    Map<String, Integer> getVanitylens();
+    public int getVanityLen(String address);
 
-    void updateVaitylen(String address, int vanitylen);
+    public Map<String, Integer> getVanitylens();
+
+    public void updateVaitylen(String address, int vanitylen);
 
 
 }

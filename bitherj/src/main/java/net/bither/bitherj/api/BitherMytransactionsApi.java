@@ -32,8 +32,8 @@ public class BitherMytransactionsApi extends HttpGetResponse<String> {
     public BitherMytransactionsApi(String address, int page) {
         String url = Utils.format(BitherUrl.BITHER_Q_MYTRANSACTIONS,
                 address);
-        if (page > 0) {
-            url = url + "/p/" + page;
+        if (page > 1) {
+            url = url + "/" + page;
         }
         setUrl(url);
     }

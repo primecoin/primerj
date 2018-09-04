@@ -34,7 +34,7 @@ public class BlockChain {
     private static BlockChain uniqueInstance = new BlockChain();
     private static final Logger log = LoggerFactory.getLogger(BlockChain.class);
     protected HashMap<byte[], Block> singleBlocks;
-    public Block lastBlock;
+    protected Block lastBlock;
     protected Block lastOrphanBlock;
 
     BlockChain() {
@@ -84,7 +84,7 @@ public class BlockChain {
         Block b = this.lastBlock;
 
         while (b != null && b.getBlockNo() > 0) {
-            locators.add(b.getBlockHash());
+            locators.add((b.getBlockHash()));
             if (++start >= 10) step *= 2;
 
             for (int i = 0; b != null && i < step; i++) {
@@ -141,12 +141,12 @@ public class BlockChain {
                 }
             }
             block.setBlockNo(prev.getBlockNo() + 1);
-            try {
-                block.verifyDifficultyFromPreviousBlock(prev);
-            } catch (Exception e) {
-                e.printStackTrace();
-                break;
-            }
+//            try {
+//                block.verifyDifficultyFromPreviousBlock(prev);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                break;
+//            }
 
             block.setMain(true);
             blocksToAdd.add(block);

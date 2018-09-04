@@ -106,14 +106,14 @@ public class ScriptBuilder {
      */
     public static Script createOutputScript(String to) {
         try {
-            if (BitherjSettings.validAddressPrefixScript(Utils.getAddressHeader(to))) {
+            if (Utils.getAddressHeader(to) == BitherjSettings.p2shHeader) {
                 // OP_HASH160 <scriptHash> OP_EQUAL
                 return new ScriptBuilder()
                         .op(OP_HASH160)
                         .data(Utils.getAddressHash(to))
                         .op(OP_EQUAL)
                         .build();
-            } else if (BitherjSettings.validAddressPrefixPubkey(Utils.getAddressHeader(to))){
+            } else if (Utils.getAddressHeader(to) == BitherjSettings.addressHeader)  {
                 // OP_DUP OP_HASH160 <pubKeyHash> OP_EQUALVERIFY OP_CHECKSIG
                 return new ScriptBuilder()
                         .op(OP_DUP)
@@ -126,7 +126,6 @@ public class ScriptBuilder {
                 return null;
             }
         } catch (AddressFormatException ex) {
-            ex.printStackTrace();
             return null;
         }
     }
