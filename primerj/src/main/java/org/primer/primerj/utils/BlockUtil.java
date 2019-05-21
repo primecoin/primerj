@@ -169,13 +169,14 @@ public class BlockUtil {
                 blockChainGetLatestBlockApi.handleHttpGet();
                 block = blockChainGetLatestBlockApi.getResult();
                 log.info("Block: " + block + " ");
-                log.info("Block: interval is " + String.valueOf(PrimerjSettings.INTERVAL));
             }
         } catch (Exception e) {
             e.printStackTrace();
             AbstractApp.notificationService.sendBroadcastGetSpvBlockComplete(false);
             throw e;
         }
+
+        /*
         if (block.getBlockNo() % PrimerjSettings.INTERVAL == 0) {
             BlockChain.getInstance().addSPVBlock(block);
             AbstractApp.bitherjSetting.setDownloadSpvFinish(true);
@@ -183,7 +184,12 @@ public class BlockUtil {
         } else {
             AbstractApp.notificationService.sendBroadcastGetSpvBlockComplete(false);
             return null;
-        }
+        } */
+
+        BlockChain.getInstance().addSPVBlock(block);
+        AbstractApp.bitherjSetting.setDownloadSpvFinish(true);
+        AbstractApp.notificationService.sendBroadcastGetSpvBlockComplete(true);
+
         return block;
     }
 
