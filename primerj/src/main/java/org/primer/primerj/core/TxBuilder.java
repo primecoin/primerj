@@ -429,8 +429,14 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
 
         int size = TxBuilder.estimationTxSize(outs.size(), scriptPubKey, tx.getOuts(), address.isCompressed());
 
+        /*
         if (size > 1000) {
             fees = (size / 1000 + 1) * fees;
+        } */
+
+        // compute the fee per byte
+        if (size > 0) {
+            fees = size * (fees / 1000);
         }
 
         // note : like bitcoinj, empty wallet will not check min output
@@ -486,8 +492,8 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
         }
 
         int size = TxBuilder.estimationTxSize(outs.size(), scriptPubKey, tx.getOuts(), address.isCompressed());
-        if (size > 1000) {
-            fees = (size / 1000 + 1) * fees;
+        if (size > 0) {
+            fees = size * (fees / 1000);
         }
 
         // note : like bitcoinj, empty wallet will not check min output
@@ -537,8 +543,8 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
         }
 
         int size = TxBuilder.estimationTxSize(outs.size(), tx.getOuts().size());
-        if (size > 1000) {
-            fees = (size / 1000 + 1) * fees;
+        if (size > 0) {
+            fees = size * (fees / 1000);
         }
 
         // note : like bitcoinj, empty wallet will not check min output
@@ -621,9 +627,8 @@ class TxBuilderDefault implements TxBuilderProtocol {
         while (true) {
             long fees = 0;
 
-            if (lastCalculatedSize >= 1000) {
-                // If the size is exactly 1000 bytes then we'll over-pay, but this should be rare.
-                fees += (lastCalculatedSize / 1000 + 1) * Utils.getFeeBase();
+            if (lastCalculatedSize >= 0) {
+                fees += lastCalculatedSize * (Utils.getFeeBase() / 1000);
             }
             if (needAtLeastReferenceFee && fees < Utils.getFeeBase())
                 fees = Utils.getFeeBase();
@@ -821,9 +826,8 @@ class TxBuilderDefault implements TxBuilderProtocol {
         while (true) {
             long fees = 0;
 
-            if (lastCalculatedSize >= 1000) {
-                // If the size is exactly 1000 bytes then we'll over-pay, but this should be rare.
-                fees += (lastCalculatedSize / 1000 + 1) * Utils.getFeeBase();
+            if (lastCalculatedSize >= 0) {
+                fees += lastCalculatedSize * (Utils.getFeeBase() / 1000);
             }
             if (needAtLeastReferenceFee && fees < Utils.getFeeBase())
                 fees = Utils.getFeeBase();
