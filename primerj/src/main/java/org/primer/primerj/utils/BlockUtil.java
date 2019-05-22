@@ -176,16 +176,6 @@ public class BlockUtil {
             throw e;
         }
 
-        /*
-        if (block.getBlockNo() % PrimerjSettings.INTERVAL == 0) {
-            BlockChain.getInstance().addSPVBlock(block);
-            AbstractApp.bitherjSetting.setDownloadSpvFinish(true);
-            AbstractApp.notificationService.sendBroadcastGetSpvBlockComplete(true);
-        } else {
-            AbstractApp.notificationService.sendBroadcastGetSpvBlockComplete(false);
-            return null;
-        } */
-
         BlockChain.getInstance().addSPVBlock(block);
         AbstractApp.bitherjSetting.setDownloadSpvFinish(true);
         AbstractApp.notificationService.sendBroadcastGetSpvBlockComplete(true);
