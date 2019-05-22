@@ -429,12 +429,7 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
 
         int size = TxBuilder.estimationTxSize(outs.size(), scriptPubKey, tx.getOuts(), address.isCompressed());
 
-        /*
-        if (size > 1000) {
-            fees = (size / 1000 + 1) * fees;
-        } */
-
-        // compute the fee per byte
+        // calculate transaction fee based on estimated transaction size and fee per byte
         if (size > 0) {
             fees = size * (fees / 1000);
         }
@@ -492,8 +487,8 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
         }
 
         int size = TxBuilder.estimationTxSize(outs.size(), scriptPubKey, tx.getOuts(), address.isCompressed());
-        if (size > 0) {
-            fees = size * (fees / 1000);
+        if (size > 1000) {
+            fees = (size / 1000 + 1) * fees;
         }
 
         // note : like bitcoinj, empty wallet will not check min output
@@ -521,25 +516,16 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
         for (Out out : tx.getOuts()) {
             value += out.getOutValue();
         }
-        boolean needMinFee = TxBuilder.needMinFee(tx.getOuts());
 
         if (value != TxBuilder.getAmount(unspendOuts) || value != TxBuilder.getAmount(outs)) {
             return null;
         }
 
         long fees = 0;
-        if (needMinFee) {
-            if (coin != null && coin.length > 0) {
-                fees = coin[0].getSplitNormalFee();
-            } else {
-                fees = Utils.getFeeBase();
-            }
+        if (coin != null && coin.length > 0) {
+            fees = coin[0].getSplitNormalFee();
         } else {
-            // no fee logic
-            int s = TxBuilder.estimationTxSize(outs.size(), tx.getOuts().size());
-            if (TxBuilder.getCoinDepth(outs) <= TxBuilder.TX_FREE_MIN_PRIORITY * s) {
-                fees = Utils.getFeeBase();
-            }
+            fees = Utils.getFeeBase();
         }
 
         int size = TxBuilder.estimationTxSize(outs.size(), tx.getOuts().size());
@@ -620,8 +606,6 @@ class TxBuilderDefault implements TxBuilderProtocol {
             value += out.getOutValue();
         }
 
-        boolean needAtLeastReferenceFee = TxBuilder.needMinFee(tx.getOuts());
-
         List<Out> bestCoinSelection = null;
         Out bestChangeOutput = null;
         while (true) {
@@ -630,8 +614,6 @@ class TxBuilderDefault implements TxBuilderProtocol {
             if (lastCalculatedSize >= 0) {
                 fees += lastCalculatedSize * (Utils.getFeeBase() / 1000);
             }
-            if (needAtLeastReferenceFee && fees < Utils.getFeeBase())
-                fees = Utils.getFeeBase();
 
             valueNeeded = value + fees;
 
@@ -644,22 +626,6 @@ class TxBuilderDefault implements TxBuilderProtocol {
 
             if (TxBuilder.getAmount(selectedOuts) < valueNeeded)
                 break;
-
-            // no fee logic
-            if (!needAtLeastReferenceFee) {
-                long total = TxBuilder.getAmount(selectedOuts);
-                if (total - value < Utils.CENT && total - value >= Utils.getFeeBase()) {
-                    needAtLeastReferenceFee = true;
-                    continue;
-                }
-                int s = TxBuilder.estimationTxSize(selectedOuts.size(), scriptPubKey, tx.getOuts(), isCompressed);
-                if (total - value > Utils.CENT)
-                    s += 34;
-                if (TxBuilder.getCoinDepth(selectedOuts) <= TxBuilder.TX_FREE_MIN_PRIORITY * s) {
-                    needAtLeastReferenceFee = true;
-                    continue;
-                }
-            }
 
             boolean eitherCategory2Or3 = false;
             boolean isCategory3 = false;
@@ -702,7 +668,7 @@ class TxBuilderDefault implements TxBuilderProtocol {
                 }
             }
             size += TxBuilder.estimationTxSize(selectedOuts.size(), scriptPubKey, tx.getOuts(), isCompressed);
-            if (size / 1000 > lastCalculatedSize / 1000 && Utils.getFeeBase() > 0) {
+            if (size > lastCalculatedSize && Utils.getFeeBase() > 0) {
                 lastCalculatedSize = size;
                 // We need more fees anyway, just try again with the same additional value
                 additionalValueForNextCategory = additionalValueSelected;
@@ -819,8 +785,6 @@ class TxBuilderDefault implements TxBuilderProtocol {
             value += out.getOutValue();
         }
 
-        boolean needAtLeastReferenceFee = TxBuilder.needMinFee(tx.getOuts());
-
         List<Out> bestCoinSelection = null;
         Out bestChangeOutput = null;
         while (true) {
@@ -829,8 +793,6 @@ class TxBuilderDefault implements TxBuilderProtocol {
             if (lastCalculatedSize >= 0) {
                 fees += lastCalculatedSize * (Utils.getFeeBase() / 1000);
             }
-            if (needAtLeastReferenceFee && fees < Utils.getFeeBase())
-                fees = Utils.getFeeBase();
 
             valueNeeded = value + fees;
 
@@ -843,22 +805,6 @@ class TxBuilderDefault implements TxBuilderProtocol {
 
             if (TxBuilder.getAmount(selectedOuts) < valueNeeded)
                 break;
-
-            // no fee logic
-            if (!needAtLeastReferenceFee) {
-                long total = TxBuilder.getAmount(selectedOuts);
-                if (total - value < Utils.CENT && total - value >= Utils.getFeeBase()) {
-                    needAtLeastReferenceFee = true;
-                    continue;
-                }
-                int s = TxBuilder.estimationTxSize(selectedOuts.size(), tx.getOuts().size());
-                if (total - value > Utils.CENT)
-                    s += 34;
-                if (TxBuilder.getCoinDepth(selectedOuts) <= TxBuilder.TX_FREE_MIN_PRIORITY * s) {
-                    needAtLeastReferenceFee = true;
-                    continue;
-                }
-            }
 
             boolean eitherCategory2Or3 = false;
             boolean isCategory3 = false;
@@ -901,7 +847,7 @@ class TxBuilderDefault implements TxBuilderProtocol {
                 }
             }
             size += TxBuilder.estimationTxSize(selectedOuts.size(), tx.getOuts().size());
-            if (size / 1000 > lastCalculatedSize / 1000 && Utils.getFeeBase() > 0) {
+            if (size > lastCalculatedSize && Utils.getFeeBase() > 0) {
                 lastCalculatedSize = size;
                 // We need more fees anyway, just try again with the same additional value
                 additionalValueForNextCategory = additionalValueSelected;
