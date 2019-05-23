@@ -178,6 +178,7 @@ public class BlockUtil {
                 blockChainGetLatestBlockApi.handleHttpGet();
                 block = blockChainGetLatestBlockApi.getResult();
                 log.info("Block: " + block + " ");
+                log.info("Block: interval is " + String.valueOf(PrimerjSettings.INTERVAL));
             }
         } catch (Exception e) {
             e.printStackTrace();
