@@ -149,7 +149,7 @@ public class PrimerjSettings {
             this.satoshi = satoshi;
         }
 
-        public int getMinFeeSatoshi() {
+        public int getFeeRateSatoshiPerKB() {
             return satoshi;
         }
     }

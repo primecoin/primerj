@@ -521,12 +521,7 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
             return null;
         }
 
-        long fees = 0;
-        if (coin != null && coin.length > 0) {
-            fees = coin[0].getSplitNormalFee();
-        } else {
-            fees = Utils.getFeeBase();
-        }
+        long fees = Utils.getFeeBase();
 
         int size = TxBuilder.estimationTxSize(outs.size(), tx.getOuts().size());
         if (size > 0) {
@@ -612,7 +607,7 @@ class TxBuilderDefault implements TxBuilderProtocol {
             long fees = 0;
 
             if (lastCalculatedSize >= 0) {
-                fees += lastCalculatedSize * (Utils.getFeeBase() / 1000);
+                fees = lastCalculatedSize * (Utils.getFeeBase() / 1000);
             }
 
             valueNeeded = value + fees;
@@ -791,7 +786,7 @@ class TxBuilderDefault implements TxBuilderProtocol {
             long fees = 0;
 
             if (lastCalculatedSize >= 0) {
-                fees += lastCalculatedSize * (Utils.getFeeBase() / 1000);
+                fees = lastCalculatedSize * (Utils.getFeeBase() / 1000);
             }
 
             valueNeeded = value + fees;
