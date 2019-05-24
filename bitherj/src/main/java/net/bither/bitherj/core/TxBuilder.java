@@ -416,25 +416,12 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
         }
 
         long fees = 0;
-        if (needMinFee) {
-            if (coin != null && coin.length > 0) {
-                fees = coin[0].getSplitNormalFee();
-            } else {
-                fees = Utils.getFeeBase();
-            }
-        } else {
-            // no fee logic
-            int s = TxBuilder.estimationTxSize(outs.size(), scriptPubKey, tx.getOuts(), address.isCompressed());
-            if (TxBuilder.getCoinDepth(outs) <= TxBuilder.TX_FREE_MIN_PRIORITY * s) {
-                fees = Utils.getFeeBase();
-            }
-        }
 
         int size = TxBuilder.estimationTxSize(outs.size(), scriptPubKey, tx.getOuts(), address.isCompressed());
 
         // calculate transaction fee based on estimated transaction size and fee per byte
         if (size > 0) {
-            fees = size * (fees / 1000);
+            fees = size * (Utils.getFeeBase() / 1000);
         }
 
         // note : like bitcoinj, empty wallet will not check min output
