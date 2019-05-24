@@ -524,11 +524,11 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
             return null;
         }
 
-        long fees = Utils.getFeeBase();
+        long fees = 0;
 
         int size = TxBuilder.estimationTxSize(outs.size(), tx.getOuts().size());
         if (size > 0) {
-            fees = size * (fees / 1000);
+            fees = size * (Utils.getFeeBase() / 1000);
         }
 
         // note : like bitcoinj, empty wallet will not check min output

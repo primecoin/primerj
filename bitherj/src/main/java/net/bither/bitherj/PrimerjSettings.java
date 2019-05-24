@@ -140,7 +140,7 @@ public class PrimerjSettings {
     public static final boolean ensureMinRequiredFee = true;
 
     public enum TransactionFeeMode {
-        // Transaction fee rate per KB
+        // Transaction fee rate per kB
         Normal(100000000), High(200000000), Higher(500000000);
 
         private int satoshi;
