@@ -598,6 +598,10 @@ class TxBuilderDefault implements TxBuilderProtocol {
 
             if (lastCalculatedSize >= 0) {
                 fees = lastCalculatedSize * (Utils.getFeeBase() / 1000);
+                long residual = fees % Utils.getFeePrecision();
+                if(residual!=0) {
+                    fees += Utils.getFeePrecision() - residual;
+                }
             }
 
             valueNeeded = value + fees;
