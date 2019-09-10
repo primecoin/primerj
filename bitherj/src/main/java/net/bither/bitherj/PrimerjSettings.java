@@ -54,6 +54,11 @@ public class PrimerjSettings {
 
     public static final BigInteger proofOfWorkLimit = Utils.decodeCompactBits(0x1d00ffffL);
     public static final int port = 9911;
+    public static final int testNetPort = 9913;
+    public static int getPort(boolean isTestNet){
+        if(isTestNet) return testNetPort;
+        return port;
+    }
     //    public static final int port = 8333;
     public static final long packetMagic = 0xe4e7e5e7L;
 //    public static final long packetMagic = 0xf9beb4d9L;
@@ -61,6 +66,7 @@ public class PrimerjSettings {
 
     //    public static final int addressHeader = 0;
     public static final int addressHeader = 23;
+    public static final int testAddressHeader = 111;
 
     public static final int btgAddressHeader = 38;
     public static final int btwAddressHeader = 73;
@@ -73,6 +79,11 @@ public class PrimerjSettings {
     public static final int btwP2shHeader = 31;
     public static final int btfP2shHeader = 40;
     public static final int btpP2shHeader = 58;
+
+    public static int getAddressHeader(boolean isTestNet) {
+        if(isTestNet) return testAddressHeader;
+        else return addressHeader;
+    }
 
     public static final int dumpedPrivateKeyHeader = 151;
 //    public static final int dumpedPrivateKeyHeader = 128;
@@ -138,6 +149,10 @@ public class PrimerjSettings {
 
     public static final boolean ensureMinRequiredFee = true;
 
+    public enum NetType {
+        MAINNET, TESTNET
+    }
+
     public enum TransactionFeeMode {
         // Transaction fee rate per kB
         Normal(100000000), High(200000000), Higher(500000000);
@@ -181,7 +196,7 @@ public class PrimerjSettings {
     }
 
     public static boolean validAddressPrefixPubkey(int pubkey) {
-        if (pubkey == addressHeader || pubkey == btgAddressHeader || pubkey == btwAddressHeader ||
+        if (pubkey == getAddressHeader(Utils.isTestNet()) || pubkey == btgAddressHeader || pubkey == btwAddressHeader ||
                 pubkey == btfAddressHeader || pubkey == btpAddressHeader) {
             return true;
         }
