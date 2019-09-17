@@ -55,12 +55,13 @@ public class PrimerjSettings {
     public static final BigInteger proofOfWorkLimit = Utils.decodeCompactBits(0x1d00ffffL);
     public static final int port = 9911;
     public static final int testNetPort = 9913;
-    public static int getPort(boolean isTestNet){
-        if(isTestNet) return testNetPort;
+    public static int getPort(){
+        if(Utils.isTestNet()) return testNetPort;
         return port;
     }
     //    public static final int port = 8333;
     public static final long packetMagic = 0xe4e7e5e7L;
+    public static final long testNetPacketMagic = 0xfbfecbc3L;
 //    public static final long packetMagic = 0xf9beb4d9L;
 
 
@@ -80,9 +81,14 @@ public class PrimerjSettings {
     public static final int btfP2shHeader = 40;
     public static final int btpP2shHeader = 58;
 
-    public static int getAddressHeader(boolean isTestNet) {
-        if(isTestNet) return testAddressHeader;
+    public static int getAddressHeader() {
+        if(Utils.isTestNet()) return testAddressHeader;
         else return addressHeader;
+    }
+
+    public static long getPacketMagic() {
+        if(Utils.isTestNet()) return testNetPacketMagic;
+        else return packetMagic;
     }
 
     public static final int dumpedPrivateKeyHeader = 151;
@@ -196,7 +202,7 @@ public class PrimerjSettings {
     }
 
     public static boolean validAddressPrefixPubkey(int pubkey) {
-        if (pubkey == getAddressHeader(Utils.isTestNet()) || pubkey == btgAddressHeader || pubkey == btwAddressHeader ||
+        if (pubkey == getAddressHeader() || pubkey == btgAddressHeader || pubkey == btwAddressHeader ||
                 pubkey == btfAddressHeader || pubkey == btpAddressHeader) {
             return true;
         }

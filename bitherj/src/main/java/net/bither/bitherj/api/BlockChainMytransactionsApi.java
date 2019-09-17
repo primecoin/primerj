@@ -17,12 +17,12 @@ public class BlockChainMytransactionsApi extends HttpsGetResponse<String> {
         this.result = response;
     }
     public BlockChainMytransactionsApi(String address,int offset) {
-        String url = Utils.format(PrimerUrl.getByAddress(Utils.isTestNet()), address);
+        String url = Utils.format(PrimerUrl.getByAddress(), address);
         setUrl(url);
     }
 
     public BlockChainMytransactionsApi(String address) {
-        String url = Utils.format(PrimerUrl.getByAddress(Utils.isTestNet()), address);
+        String url = Utils.format(PrimerUrl.getByAddress(), address);
         setUrl(url);
     }
 

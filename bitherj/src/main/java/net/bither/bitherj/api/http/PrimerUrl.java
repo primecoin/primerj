@@ -56,12 +56,12 @@ public class PrimerUrl {
     public static final String GET_BY_SYNCBLOCK = "https://explorer.primecoin.net/api/syncblock/";
     public static final String GET_BY_ADDRESS_TESTNET = "https://testexplorer.primecoin.net/api/searchrawtransactions/%s";
     public static final String GET_BY_SYNCBLOCK_TESTNET = "https://testexplorer.primecoin.net/api/syncblock/";
-    public static String getByAddress(boolean isTestNet){
-        if(isTestNet) return GET_BY_ADDRESS_TESTNET;
+    public static String getByAddress(){
+        if(Utils.isTestNet()) return GET_BY_ADDRESS_TESTNET;
         return GET_BY_ADDRESS;
     }
-    public static String getBySyncBlock(boolean isTestNet){
-        if(isTestNet) return GET_BY_SYNCBLOCK_TESTNET;
+    public static String getBySyncBlock(){
+        if(Utils.isTestNet()) return GET_BY_SYNCBLOCK_TESTNET;
         return GET_BY_SYNCBLOCK;
     }
 
@@ -108,8 +108,8 @@ public class PrimerUrl {
     //other
     public static final String BCHAIN_INFO_ADDRESS_URL = "https://explorer.primecoin.net/address/";
     public static final String BCHAIN_INFO_ADDRESS_URL_TESTNET = "https://testexplorer.primecoin.net/address/";
-    public static String bChainInfoAddressUrl(boolean isTestNet){
-        if(isTestNet) return BCHAIN_INFO_ADDRESS_URL_TESTNET;
+    public static String bChainInfoAddressUrl(){
+        if(Utils.isTestNet()) return BCHAIN_INFO_ADDRESS_URL_TESTNET;
         return BCHAIN_INFO_ADDRESS_URL;
     }
     public static final String BLOCKCHAIN_INFO_ADDRESS_URL = "http://blockchain.info/address/";

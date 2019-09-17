@@ -5,7 +5,6 @@ import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.crypto.TransactionSignature;
 import net.bither.bitherj.utils.UnitUtil;
-import net.bither.bitherj.utils.Utils;
 
 /**
  * Created by Hzz on 2017/11/16.
@@ -159,7 +158,7 @@ public enum SplitCoin {
     public int getAddressHeader() {
         switch (this) {
             case BCC:
-                return PrimerjSettings.getAddressHeader(Utils.isTestNet());
+                return PrimerjSettings.getAddressHeader();
             case BTG:
                 return PrimerjSettings.btgAddressHeader;
             case BTW:
@@ -169,7 +168,7 @@ public enum SplitCoin {
             case BTP:
                 return PrimerjSettings.btpAddressHeader;
         }
-        return PrimerjSettings.getAddressHeader(Utils.isTestNet());
+        return PrimerjSettings.getAddressHeader();
     }
 
     public String getIsGatKey() {
