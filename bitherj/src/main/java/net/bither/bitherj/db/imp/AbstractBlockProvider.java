@@ -283,8 +283,7 @@ public abstract class AbstractBlockProvider extends AbstractProvider implements 
     }
 
     public void cleanAllBlock() {
-        String sql = "select count(0) cnt from blocks";
-        sql = "delete from blocks where block_no>?";
+        String sql = "delete from blocks where block_no>?";
         this.execUpdate(sql, new String[]{Integer.toString(0)});
     }
 
