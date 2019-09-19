@@ -67,7 +67,7 @@ public class PrimerjSettings {
 
     //    public static final int addressHeader = 0;
     public static final int addressHeader = 23;
-    public static final int testAddressHeader = 111;
+    public static final int testNetAddressHeader = 111;
 
     public static final int btgAddressHeader = 38;
     public static final int btwAddressHeader = 73;
@@ -82,7 +82,7 @@ public class PrimerjSettings {
     public static final int btpP2shHeader = 58;
 
     public static int getAddressHeader() {
-        if(Utils.isTestNet()) return testAddressHeader;
+        if(Utils.isTestNet()) return testNetAddressHeader;
         else return addressHeader;
     }
 
