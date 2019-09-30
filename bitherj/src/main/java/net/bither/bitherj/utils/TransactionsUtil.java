@@ -778,6 +778,7 @@ public class TransactionsUtil {
 
                 List<Tx> transactions = new ArrayList<Tx>();
 
+                int pageIndex = 0;
                 while (needGetTxs) {
 
                     // TODO: get data from bither.net else from blockchain.info
@@ -802,7 +803,7 @@ public class TransactionsUtil {
                         page++;
 
                     } else {
-                        BlockChainMytransactionsApi blockChainMytransactionsApi = new BlockChainMytransactionsApi(address.getAddress(),txSum);
+                        BlockChainMytransactionsApi blockChainMytransactionsApi = new BlockChainMytransactionsApi(address.getAddress(),pageIndex);
                         blockChainMytransactionsApi.handleHttpGet();
                         String txResult = blockChainMytransactionsApi.getResult();
                         JSONObject jsonObject = new JSONObject(txResult);
@@ -815,15 +816,13 @@ public class TransactionsUtil {
                         // TODO: get transactions from blockChain.info
                         List<Tx> fromTxList  = TransactionsUtil.getTransactionsFromBlockChain(jsonObject, storeBlockHeight);
                         List<Tx> compressTxList = AddressManager.getInstance().compressTxsForApi(fromTxList, address);
+                        int transactionCount = TransactionsUtil.getTransactionsCountFromBlockChain(jsonObject);
+                        pageIndex = pageIndex + transactionCount;
+                        if(0==transactionCount) needGetTxs = false;
                         transactions.addAll(compressTxList);
                         txSum = txSum + transactions.size();
-                        if (compressTxList.size()<BlockChainMytransactionsApi.length){
-                            Collections.sort(transactions, new ComparatorTx());
-                            address.initTxs(transactions);
-                            needGetTxs = false;
-                        }
-
-
+                        Collections.sort(transactions, new ComparatorTx());
+                        address.initTxs(transactions);
                     }
                 }
 
@@ -841,6 +840,10 @@ public class TransactionsUtil {
             }
         }
 
+    }
+
+    private static int getTransactionsCountFromBlockChain(JSONObject jsonObject) {
+        return jsonObject.getJSONArray("result").length();
     }
 
     private  static List<Tx> getTransactionsFromBlockChain(JSONObject jsonObject, int storeBlockHeight) throws Exception {
