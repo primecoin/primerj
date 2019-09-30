@@ -778,7 +778,6 @@ public class TransactionsUtil {
 
                 List<Tx> transactions = new ArrayList<Tx>();
 
-                int pageIndex = 0;
                 while (needGetTxs) {
 
                     // TODO: get data from bither.net else from blockchain.info
@@ -803,7 +802,7 @@ public class TransactionsUtil {
                         page++;
 
                     } else {
-                        BlockChainMytransactionsApi blockChainMytransactionsApi = new BlockChainMytransactionsApi(address.getAddress(),pageIndex);
+                        BlockChainMytransactionsApi blockChainMytransactionsApi = new BlockChainMytransactionsApi(address.getAddress(),txSum);
                         blockChainMytransactionsApi.handleHttpGet();
                         String txResult = blockChainMytransactionsApi.getResult();
                         JSONObject jsonObject = new JSONObject(txResult);
@@ -817,10 +816,9 @@ public class TransactionsUtil {
                         List<Tx> fromTxList  = TransactionsUtil.getTransactionsFromBlockChain(jsonObject, storeBlockHeight);
                         List<Tx> compressTxList = AddressManager.getInstance().compressTxsForApi(fromTxList, address);
                         int transactionCount = TransactionsUtil.getTransactionsCountFromBlockChain(jsonObject);
-                        pageIndex = pageIndex + transactionCount;
+                        txSum = txSum + transactionCount;
                         if(0==transactionCount) needGetTxs = false;
                         transactions.addAll(compressTxList);
-                        txSum = txSum + transactions.size();
                         Collections.sort(transactions, new ComparatorTx());
                         address.initTxs(transactions);
                     }
