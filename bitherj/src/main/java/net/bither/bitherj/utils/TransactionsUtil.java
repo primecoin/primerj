@@ -795,8 +795,6 @@ public class TransactionsUtil {
                         transactions = TransactionsUtil.getTransactionsFromBither(jsonObject, storeBlockHeight);
                         transactions = AddressManager.getInstance().compressTxsForApi(transactions, address);
 
-                        Collections.sort(transactions, new ComparatorTx());
-                        address.initTxs(transactions);
                         txSum = txSum + transactions.size();
                         needGetTxs = transactions.size() > 0;
                         page++;
@@ -819,10 +817,10 @@ public class TransactionsUtil {
                         txSum = txSum + transactionCount;
                         if(0==transactionCount) needGetTxs = false;
                         transactions.addAll(compressTxList);
-                        Collections.sort(transactions, new ComparatorTx());
-                        address.initTxs(transactions);
                     }
                 }
+                Collections.sort(transactions, new ComparatorTx());
+                address.initTxs(transactions);
 
                 if (apiBlockCount < storeBlockHeight && storeBlockHeight - apiBlockCount < 100) {
                     BlockChain.getInstance().rollbackBlock(apiBlockCount);
