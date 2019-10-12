@@ -770,9 +770,10 @@ public class TransactionsUtil {
                 storeBlockHeight = storedBlock.getBlockNo();
             }
 
-            if (!address.isSyncComplete()) {
+            if (!address.isSyncComplete() && !address.isSyncing()) {
+                address.setSyncing(true);
                 int apiBlockCount = 0;
-                int txSum = 0;
+                int txSum = address.getSyncedTxsCount();
                 boolean needGetTxs = true;
                 int page = 1;
 
@@ -817,6 +818,9 @@ public class TransactionsUtil {
                         txSum = txSum + transactionCount;
                         if(0==transactionCount) needGetTxs = false;
                         transactions.addAll(compressTxList);
+                        address.initTxs(compressTxList);
+                        address.setSyncedTxsCount(txSum);
+                        address.updateSyncedTxsCount();
                     }
                 }
                 Collections.sort(transactions, new ComparatorTx());
@@ -833,6 +837,7 @@ public class TransactionsUtil {
                 } else {
                     address.updateSyncComplete();
                 }
+                address.setSyncing(false);
             }
         }
 
