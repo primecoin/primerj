@@ -355,25 +355,6 @@ public class Tx extends Message implements Comparable<Tx> {
         if (this.getBlockNo() != tx.getBlockNo()) {
             return tx.getBlockNo() - this.getBlockNo();
         } else {
-            boolean isTx2AfterTx1 = false;
-            for (In in : tx.getIns()) {
-                if (Arrays.equals(in.getPrevTxHash(), this.getTxHash())) {
-                    isTx2AfterTx1 = true;
-                    break;
-                }
-            }
-            if (isTx2AfterTx1) {
-                return 1;
-            }
-            boolean isTx1AfterTx2 = false;
-            for (In in : this.getIns()) {
-                if (Arrays.equals(in.getPrevTxHash(), tx.getTxHash())) {
-                    isTx1AfterTx2 = true;
-                }
-            }
-            if (isTx1AfterTx2) {
-                return -1;
-            }
             return tx.getTxTime() - this.getTxTime();
         }
     }
