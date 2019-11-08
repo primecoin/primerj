@@ -842,6 +842,7 @@ public class TransactionsUtil {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
+                address.syncFail();
                 address.setSyncing(false);
             }
         }
