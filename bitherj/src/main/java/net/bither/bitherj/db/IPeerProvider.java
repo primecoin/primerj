@@ -31,6 +31,8 @@ public interface IPeerProvider {
 
     void connectSucceed(InetAddress address);
 
+    void conncetFail(InetAddress address);
+
     List<Peer> getPeersWithLimit(int limit);
 
     void cleanPeers();
