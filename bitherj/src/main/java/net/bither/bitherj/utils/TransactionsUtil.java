@@ -840,9 +840,9 @@ public class TransactionsUtil {
                     }
                 }
             } catch (Exception e) {
+                address.syncFail();
                 e.printStackTrace();
             } finally {
-                address.syncFail();
                 address.setSyncing(false);
             }
         }
