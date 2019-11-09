@@ -58,7 +58,7 @@ public class Address implements Comparable<Address> {
     protected String address;
 
     protected boolean syncComplete = false;
-    private static final int MAX_SYNC_FAILURE_COUNT = 6;
+    private static final int MAX_SYNC_FAILURE_COUNT = 3;
     protected int syncCount = 0;
     protected boolean syncing = false;
     protected int syncedTxsCount = 0;
@@ -538,7 +538,7 @@ public class Address implements Comparable<Address> {
         syncCount = syncCount + 1;
     }
 
-    public boolean isSyncFailed() {
+    public boolean isSyncRetryExceeded() {
         return (syncCount > MAX_SYNC_FAILURE_COUNT);
     }
 

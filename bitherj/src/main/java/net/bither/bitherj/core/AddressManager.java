@@ -575,7 +575,7 @@ public class AddressManager implements HDMKeychain.HDMAddressChangeDelegate,
 
     public boolean addressIsSyncComplete() {
         for (Address address : AddressManager.getInstance().getAllAddresses()) {
-            if (!address.isSyncComplete() && !address.isSyncFailed()) {
+            if (!address.isSyncComplete() && !address.isSyncRetryExceeded()) {
                 return false;
             }
         }
