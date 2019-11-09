@@ -100,7 +100,7 @@ public abstract class AbstractPeerProvider extends AbstractProvider implements I
         this.execUpdate(sql, new String[] {Long.toString(Utils.parseLongFromAddress(address))});
     }
 
-    public void conncetFail(InetAddress address) {
+    public void connectFail(InetAddress address) {
         long addressLong = Utils.parseLongFromAddress(address);
         String sql = "update peers set peer_connected_cnt=peer_connected_cnt+1 where peer_address=?";
         this.execUpdate(sql, new String[] {Long.toString(addressLong)});
