@@ -289,6 +289,10 @@ public class PeerManager {
                         result.add(peer);
                     }
                 }
+                if(result.isEmpty()){
+                    abandonPeers.clear();
+                    result.addAll(peers);
+                }
                 AbstractDb.peerProvider.addPeers(result);
                 AbstractDb.peerProvider.cleanPeers();
             }
@@ -450,7 +454,7 @@ public class PeerManager {
             @Override
             public void run() {
                 if (reason == null || reason == Peer.DisconnectReason.Normal) {
-                    peer.connectFail();
+                    // peer.connectFail();
                 } else if (reason == Peer.DisconnectReason.Timeout) {
                     if (peer.getPeerConnectedCnt() > MAX_CONNECT_FAILURE_COUNT) {
                         // Failed too many times, we don't want to play with it any more.
@@ -464,8 +468,6 @@ public class PeerManager {
                 }
                 int previousConnectedCount = connectedPeers.size();
                 connectedPeers.remove(peer);
-                log.info("Peer disconnected {} , remaining {} peers , reason: " + reason, peer
-                        .getPeerAddress().getHostAddress(), connectedPeers.size());
                 if (previousConnectedCount > 0 && connectedPeers.size() == 0) {
                     connected.set(false);
                     sendConnectedChangeBroadcast();
