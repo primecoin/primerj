@@ -454,7 +454,7 @@ public class PeerManager {
             @Override
             public void run() {
                 if (reason == null || reason == Peer.DisconnectReason.Normal) {
-                    // peer.connectFail();
+                    peer.connectFail();
                 } else if (reason == Peer.DisconnectReason.Timeout) {
                     if (peer.getPeerConnectedCnt() > MAX_CONNECT_FAILURE_COUNT) {
                         // Failed too many times, we don't want to play with it any more.
