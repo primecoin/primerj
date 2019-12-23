@@ -775,7 +775,7 @@ public class PeerManager {
                     }
                 } catch (Exception e) {
                     // abandonPeer(fromPeer); // peer should not be abandoned because of orphan block
-                    log.warn("Peer {} relay block Error. Drop it",
+                    log.warn("Peer {} relay block Error. ",
                             fromPeer.getPeerAddress().getHostAddress());
                 }
             }
