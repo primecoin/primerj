@@ -769,7 +769,7 @@ public class PeerManager {
                         AbstractApp.notificationService.sendLastBlockChange();
                     } else {
                         // abandonPeer(fromPeer); // peer should not be abandoned because of orphan block
-                        log.info("Peer {} relay {}/{} block. drop this peer",
+                        log.info("Peer {} relay {}/{} block. ",
                                 fromPeer.getPeerAddress().getHostAddress(), relayedCnt,
                                 blocks.size());
                     }
