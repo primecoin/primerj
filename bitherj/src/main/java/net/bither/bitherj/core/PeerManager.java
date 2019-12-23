@@ -768,13 +768,13 @@ public class PeerManager {
                                         .getLastBlock().getTxHashes().size());
                         AbstractApp.notificationService.sendLastBlockChange();
                     } else {
-                        abandonPeer(fromPeer);
+                        // abandonPeer(fromPeer); // peer should not be abandoned because of orphan block
                         log.info("Peer {} relay {}/{} block. drop this peer",
                                 fromPeer.getPeerAddress().getHostAddress(), relayedCnt,
                                 blocks.size());
                     }
                 } catch (Exception e) {
-                    abandonPeer(fromPeer);
+                    // abandonPeer(fromPeer); // peer should not be abandoned because of orphan block
                     log.warn("Peer {} relay block Error. Drop it",
                             fromPeer.getPeerAddress().getHostAddress());
                 }
