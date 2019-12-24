@@ -768,14 +768,14 @@ public class PeerManager {
                                         .getLastBlock().getTxHashes().size());
                         AbstractApp.notificationService.sendLastBlockChange();
                     } else {
-                        // abandonPeer(fromPeer); // peer should not be abandoned because of orphan block
-                        log.info("Peer {} relay {}/{} block. ",
+                        // abandonPeer(fromPeer);
+                        log.info("Peer {} relay {}/{} block. Possible orphan block encountered, NOT dropping peer.",
                                 fromPeer.getPeerAddress().getHostAddress(), relayedCnt,
                                 blocks.size());
                     }
                 } catch (Exception e) {
-                    // abandonPeer(fromPeer); // peer should not be abandoned because of orphan block
-                    log.warn("Peer {} relay block Error. ",
+                    // abandonPeer(fromPeer);
+                    log.warn("Peer {} relay block Error. NOT dropping peer.",
                             fromPeer.getPeerAddress().getHostAddress());
                 }
             }
