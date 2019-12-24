@@ -769,13 +769,13 @@ public class PeerManager {
                         AbstractApp.notificationService.sendLastBlockChange();
                     } else {
                         // abandonPeer(fromPeer);
-                        log.info("Peer {} relay {}/{} block. Possible orphan block encountered, NOT dropping peer.",
+                        log.info("Peer {} relay {}/{} block. Possible orphan block encountered, NOT dropping peer",
                                 fromPeer.getPeerAddress().getHostAddress(), relayedCnt,
                                 blocks.size());
                     }
                 } catch (Exception e) {
-                    // abandonPeer(fromPeer);
-                    log.warn("Peer {} relay block Error. NOT dropping peer.",
+                    abandonPeer(fromPeer);
+                    log.warn("Peer {} relay block Error. Drop it",
                             fromPeer.getPeerAddress().getHostAddress());
                 }
             }
