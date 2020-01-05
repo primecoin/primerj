@@ -773,6 +773,7 @@ public class TransactionsUtil {
 
                 if (!address.isSyncComplete() && !address.isSyncing()) {
                     address.setSyncing(true);
+                    AbstractApp.notificationService.sendBroadcastAddressTxLoading(address.getAddress());
                     int apiBlockCount = 0;
                     int txSum = address.getSyncedTxsCount();
                     boolean needGetTxs = true;
@@ -844,6 +845,7 @@ public class TransactionsUtil {
                 e.printStackTrace();
             } finally {
                 address.setSyncing(false);
+                AbstractApp.notificationService.sendBroadcastAddressTxLoading(null);
             }
         }
 
