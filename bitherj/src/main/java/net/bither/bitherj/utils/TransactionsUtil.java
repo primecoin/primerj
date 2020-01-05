@@ -282,7 +282,7 @@ public class TransactionsUtil {
             getTxForDesktopHDM(desktopHDMKeychain, flag);
 
         }
-
+        AbstractApp.notificationService.sendBroadcastAddressTxLoading(null);
     }
     private static void getTxForHDAccountMoitored(int hdSeedId, final int webType) throws Exception {
         for (AbstractHD.PathType pathType : AbstractHD.PathType.values()) {
