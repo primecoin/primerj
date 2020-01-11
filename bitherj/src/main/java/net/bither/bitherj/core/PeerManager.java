@@ -244,13 +244,10 @@ public class PeerManager {
         HashSet<Peer> peers = new HashSet<Peer>();
         peers.addAll(AbstractDb.peerProvider.getPeersWithLimit(getMaxPeerConnect()));
         log.info("{} dbpeers", peers.size());
-        if (peers.size() < getMaxPeerConnect()) {
+        if (peers.size() == 0) {
             AbstractDb.peerProvider.recreate();
             AbstractDb.peerProvider.addPeers(new ArrayList<Peer>(peers));
-            if (getPeersFromDns().size() > 0) {
-                peers.clear();
-                peers.addAll(AbstractDb.peerProvider.getPeersWithLimit(getMaxPeerConnect()));
-            }
+            peers = getPeersFromDns();
         }
         log.info("{} totalpeers", peers.size());
         return peers;
@@ -263,8 +260,9 @@ public class PeerManager {
         if(peers.size() == 0) {
             sendConnectedChangeBroadcast();
         }
-        addRelayedPeers(new ArrayList<Peer>(peers));
-        return peers;
+        HashSet<Peer> result = deleteAbandonedPeers(peers);
+        addRelayedPeers(new ArrayList<Peer>(result));
+        return result;
     }
 
     @Override
@@ -285,21 +283,25 @@ public class PeerManager {
         executor.submit(new Runnable() {
             @Override
             public void run() {
-                ArrayList<Peer> result = new ArrayList<Peer>();
-                for (Peer peer : peers) {
-                    if (!abandonPeers.contains(peer)) {
-                        result.add(peer);
-                    }
-                }
-                if(result.isEmpty()){
-                    abandonPeers.clear();
-                    result.addAll(peers);
-                    sendPeerCountChangeNotification();
-                }
-                AbstractDb.peerProvider.addPeers(result);
                 AbstractDb.peerProvider.cleanPeers();
+                AbstractDb.peerProvider.addPeers(new ArrayList<Peer>(peers));
             }
         });
+    }
+
+    private HashSet<Peer> deleteAbandonedPeers(HashSet<Peer> peers) {
+        HashSet<Peer> result = new HashSet<Peer>();
+        for (Peer peer : peers) {
+            if (!abandonPeers.contains(peer)) {
+                result.add(peer);
+            }
+        }
+        if(result.isEmpty()){
+            abandonPeers.clear();
+            result.addAll(peers);
+            sendPeerCountChangeNotification();
+        }
+        return result;
     }
 
     private void setBlockHeightForTxs(final int height, final List<byte[]> txHashes) {
@@ -513,7 +515,8 @@ public class PeerManager {
         if (peers.size() > MaxPeerCount) {
             peers = peers.subList(0, MaxPeerCount);
         }
-        addRelayedPeers(peers);
+        HashSet<Peer> result = deleteAbandonedPeers(new HashSet<Peer>(peers));
+        addRelayedPeers(new ArrayList<Peer>(result));
     }
 
     public void relayedTransaction(final Peer fromPeer, final Tx tx, final boolean isConfirmed) {
