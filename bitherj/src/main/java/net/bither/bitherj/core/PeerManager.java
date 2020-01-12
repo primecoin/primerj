@@ -259,7 +259,7 @@ public class PeerManager {
         if(peers.size() == 0) {
             sendConnectedChangeBroadcast();
         }
-        HashSet<Peer> result = deleteAbandonedPeers(peers);
+        HashSet<Peer> result = filterOutAbandonedPeers(peers);
         addRelayedPeers(new ArrayList<Peer>(result));
         return result;
     }
@@ -288,7 +288,7 @@ public class PeerManager {
         });
     }
 
-    private HashSet<Peer> deleteAbandonedPeers(HashSet<Peer> peers) {
+    private HashSet<Peer> filterOutAbandonedPeers(HashSet<Peer> peers) {
         HashSet<Peer> result = new HashSet<Peer>();
         for (Peer peer : peers) {
             if (!abandonPeers.contains(peer)) {
@@ -514,7 +514,7 @@ public class PeerManager {
         if (peers.size() > MaxPeerCount) {
             peers = peers.subList(0, MaxPeerCount);
         }
-        HashSet<Peer> result = deleteAbandonedPeers(new HashSet<Peer>(peers));
+        HashSet<Peer> result = filterOutAbandonedPeers(new HashSet<Peer>(peers));
         addRelayedPeers(new ArrayList<Peer>(result));
     }
 
