@@ -145,7 +145,6 @@ public class PeerManager {
                 for (Peer peer : connectedPeers) {
                     peer.connectError();
                     peer.disconnect();
-                    abandonPeers.add(peer);
                 }
                 connectedPeers.clear();
             }
