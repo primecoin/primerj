@@ -296,7 +296,7 @@ public class PeerManager {
                 result.add(peer);
             }
         }
-        if(result.isEmpty()){
+        if(peers.size()>0 && result.isEmpty()){
             abandonPeers.clear();
             result.addAll(peers);
             sendPeerCountChangeNotification();
