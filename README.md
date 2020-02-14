@@ -1,22 +1,21 @@
-Bitherj
+Primerj
 =======
-Bitherj is a Bitcoin Library for android.
+Primerj is Primer's Primecoin library for Android.
 
-There is also an [iOS version](https://github.com/bither/bitheri).
-
-We use Bitherj in our Bither Wallet which alse open source on github [bither-android](https://github.com/bither/bither-android).
+Primerj is used in [Primer Android](https://github.com/primecoin/primer-android).
 
 ## Feature
 
-* Complete Bitcoin Protocol (SPV)
+* Complete Primecoin Protocol (SPV)
 * SQLite
 * Seperated TXs & Private Keys
 
+## Acknowledgements
+
+Primerj is based on [Bitherj](https://github.com/bither/bitherj), Bither's Bitcoin library for Android.
 
 ## Donation
 
-Donate : 1BitherUnNvB2NsfxMnbS35kS3DTPr7PW5
+Primer developers (XPM): ANTqRE6wpE2psbJvvMLJLixfCFms1zp61y
 
-## Website
-
-[Bither.net](http://bither.net)
+Bither developers (BTC): 1BitherUnNvB2NsfxMnbS35kS3DTPr7PW5
