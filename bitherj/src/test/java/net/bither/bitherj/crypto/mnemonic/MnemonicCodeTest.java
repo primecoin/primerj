@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -233,12 +234,14 @@ public class MnemonicCodeTest {
         }
 
         @Override
-        protected InputStream openWordList() throws IOException {
+        protected HashMap<MnemonicWordList, InputStream> openWordList() throws IOException {
             InputStream stream = MnemonicCode.class.getResourceAsStream(WordListPath);
             if (stream == null) {
                 throw new FileNotFoundException(WordListPath);
             }
-            return stream;
+            HashMap<MnemonicWordList, InputStream> wordListMap = new HashMap<MnemonicWordList, InputStream>();
+            wordListMap.put(MnemonicWordList.English, stream);
+            return wordListMap;
         }
     }
 }
