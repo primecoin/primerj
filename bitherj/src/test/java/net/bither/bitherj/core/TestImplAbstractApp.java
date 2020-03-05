@@ -63,12 +63,17 @@ public class TestImplAbstractApp extends AbstractApp {
 
             @Override
             public PrimerjSettings.TransactionFeeMode getTransactionFeeMode() {
-                return PrimerjSettings.TransactionFeeMode.Low;
+                return PrimerjSettings.TransactionFeeMode.Normal;
             }
 
             @Override
             public PrimerjSettings.TransactionFeePrecision getTransactionFeePrecision() {
                 return PrimerjSettings.TransactionFeePrecision.P2;
+            }
+
+            @Override
+            public boolean isTestNet() {
+                return false;
             }
 
             @Override
