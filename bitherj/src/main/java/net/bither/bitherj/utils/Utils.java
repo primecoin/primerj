@@ -25,11 +25,6 @@ import net.bither.bitherj.AbstractApp;
 import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.core.Coin;
 import net.bither.bitherj.core.SplitCoin;
-
-import net.bither.bitherj.AbstractApp;
-import net.bither.bitherj.PrimerjSettings;
-import net.bither.bitherj.core.Coin;
-import net.bither.bitherj.core.SplitCoin;
 import net.bither.bitherj.crypto.DumpedPrivateKey;
 import net.bither.bitherj.crypto.SecureCharSequence;
 import net.bither.bitherj.exception.AddressFormatException;
@@ -699,10 +694,14 @@ public class Utils {
     }
 
     public static String toAddress(byte[] pubKeyHash) {
+        return toAddress(pubKeyHash, getNetType());
+    }
+
+    public static String toAddress(byte[] pubKeyHash, PrimerjSettings.NetType coinType) {
         checkArgument(pubKeyHash.length == 20, "Addresses are 160-bit hashes, " +
                 "so you must provide 20 bytes");
 
-        int version = PrimerjSettings.getAddressHeader();
+        int version = PrimerjSettings.getAddressHeader(coinType);
         checkArgument(version < 256 && version >= 0);
 
         byte[] addressBytes = new byte[1 + pubKeyHash.length + 4];
@@ -714,10 +713,14 @@ public class Utils {
     }
 
     public static String toP2SHAddress(byte[] pubKeyHash) {
+        return toP2SHAddress(pubKeyHash, getNetType());
+    }
+
+    public static String toP2SHAddress(byte[] pubKeyHash, PrimerjSettings.NetType coinType) {
         checkArgument(pubKeyHash.length == 20, "Addresses are 160-bit hashes, " +
                 "so you must provide 20 bytes");
 
-        int version = PrimerjSettings.getP2shHeader();
+        int version = PrimerjSettings.getP2shHeader(coinType);
         checkArgument(version < 256 && version >= 0);
 
         byte[] addressBytes = new byte[1 + pubKeyHash.length + 4];
@@ -761,7 +764,7 @@ public class Utils {
     public static String toSegwitAddress(byte[] pubKeyHash) {
         assert (pubKeyHash.length == 20);
 
-        int version = PrimerjSettings.getP2shHeader();
+        int version = PrimerjSettings.getP2shHeader(getNetType());
         assert (version < 256 && version >= 0);
 
         byte[] scriptSig = new byte[pubKeyHash.length + 2];
@@ -952,8 +955,12 @@ public class Utils {
         return AbstractApp.bitherjSetting.getTransactionFeePrecision().getPrecision();
     }
 
+    public static PrimerjSettings.NetType getNetType() {
+        return AbstractApp.bitherjSetting.getNetType();
+    }
+
     public static boolean isTestNet() {
-        return AbstractApp.bitherjSetting.isTestNet();
+        return (AbstractApp.bitherjSetting.getNetType() == PrimerjSettings.NetType.TESTNET);
     }
 
     public static long ceilingFee(long fee) {

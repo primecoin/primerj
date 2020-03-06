@@ -69,6 +69,7 @@ public class PrimerjSettings {
     public static final int addressHeader = 23;
     public static final int testNetAddressHeader = 111;
 
+    public static final int btcAddressHeader = 0;
     public static final int btgAddressHeader = 38;
     public static final int btwAddressHeader = 73;
     public static final int btfAddressHeader = 36;
@@ -76,20 +77,29 @@ public class PrimerjSettings {
 
     public static final int p2shHeader = 83;
     public static final int testNetP2shHeader = 196;
+    public static final int btcP2shHeader = 5;
     //    public static final int btgP2shHeader = 23;
     public static final int btgP2shHeader = 233;
     public static final int btwP2shHeader = 31;
     public static final int btfP2shHeader = 40;
     public static final int btpP2shHeader = 58;
 
-    public static int getAddressHeader() {
-        if(Utils.isTestNet()) return testNetAddressHeader;
-        else return addressHeader;
+    public static int getAddressHeader(NetType coinType) {
+        switch (coinType) {
+            case MAINNET: return addressHeader;
+            case TESTNET: return testNetAddressHeader;
+            case BITCOIN: return btcAddressHeader;
+            default: return addressHeader;
+        }
     }
 
-    public static int getP2shHeader() {
-        if(Utils.isTestNet()) return testNetP2shHeader;
-        else return p2shHeader;
+    public static int getP2shHeader(NetType coinType) {
+        switch (coinType) {
+            case MAINNET: return p2shHeader;
+            case TESTNET: return testNetP2shHeader;
+            case BITCOIN: return btcP2shHeader;
+            default: return p2shHeader;
+        }
     }
 
     public static long getPacketMagic() {
@@ -162,7 +172,17 @@ public class PrimerjSettings {
     public static final boolean ensureMinRequiredFee = true;
 
     public enum NetType {
-        MAINNET, TESTNET
+        MAINNET(24), TESTNET(1), BITCOIN(0); // BIP44 coin type
+
+        private int coinType;
+
+        NetType(int coinType) {
+            this.coinType = coinType;
+        }
+
+        public int getNetType() {
+            return coinType;
+        }
     }
 
     public enum TransactionFeeMode {
@@ -208,16 +228,14 @@ public class PrimerjSettings {
     }
 
     public static boolean validAddressPrefixPubkey(int pubkey) {
-        if (pubkey == getAddressHeader() || pubkey == btgAddressHeader || pubkey == btwAddressHeader ||
-                pubkey == btfAddressHeader || pubkey == btpAddressHeader) {
+        if (pubkey == addressHeader || pubkey == testNetAddressHeader || pubkey == btcAddressHeader) {
             return true;
         }
         return false;
     }
 
     public static boolean validAddressPrefixScript(int script) {
-        if (script == getP2shHeader() || script == btgP2shHeader || script == btwP2shHeader ||
-                script == btfP2shHeader || script == btpP2shHeader) {
+        if (script == p2shHeader || script == testNetP2shHeader || script == btcP2shHeader) {
             return true;
         }
         return false;

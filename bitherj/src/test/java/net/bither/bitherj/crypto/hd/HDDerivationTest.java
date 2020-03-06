@@ -1,7 +1,6 @@
 package net.bither.bitherj.crypto.hd;
 
-import net.bither.bitherj.utils.Utils;
-
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.Utils;
 
 import org.junit.Test;
@@ -85,8 +84,8 @@ public class HDDerivationTest {
             for (int j = 0; j < tc.addresses.length; j++) {
                 DeterministicKey key = external.deriveSoftened(j);
                 DeterministicKey keyPub = externalPub.deriveSoftened(j);
-                assertEquals(tc.addresses[j], Utils.toAddress(key.getPubKeyHash()));
-                assertEquals(tc.addresses[j], Utils.toAddress(keyPub.getPubKeyHash()));
+                assertEquals(tc.addresses[j], Utils.toAddress(key.getPubKeyHash(), PrimerjSettings.NetType.BITCOIN));
+                assertEquals(tc.addresses[j], Utils.toAddress(keyPub.getPubKeyHash(), PrimerjSettings.NetType.BITCOIN));
             }
 
             System.out.println("time " + i + ", " + (System.currentTimeMillis() - begin));
@@ -162,7 +161,7 @@ public class HDDerivationTest {
 
             for (int j = 0; j < tc.addresses.length; j++) {
                 DeterministicKey key = external.deriveSoftened(j);
-                assertEquals(tc.addresses[j], Utils.toAddress(key.getPubKeyHash()));
+                assertEquals(tc.addresses[j], Utils.toAddress(key.getPubKeyHash(), PrimerjSettings.NetType.BITCOIN));
             }
 
             System.out.println("der pub time " + i + ", " + (System.currentTimeMillis() - begin));

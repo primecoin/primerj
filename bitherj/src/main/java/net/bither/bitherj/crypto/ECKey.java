@@ -19,9 +19,7 @@ package net.bither.bitherj.crypto;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
-import net.bither.bitherj.utils.Sha256Hash;
-import net.bither.bitherj.utils.Utils;
-
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.Utils;
 
@@ -360,6 +358,10 @@ public class ECKey implements Serializable {
      */
     public String toAddress() {
         return Utils.toAddress(Utils.sha256hash160(pub));
+    }
+
+    public String toAddress(PrimerjSettings.NetType coinType) {
+        return Utils.toAddress(Utils.sha256hash160(pub), coinType);
     }
 
     /**

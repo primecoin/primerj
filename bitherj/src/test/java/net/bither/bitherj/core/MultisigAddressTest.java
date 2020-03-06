@@ -1,7 +1,6 @@
 package net.bither.bitherj.core;
 
-import net.bither.bitherj.utils.Utils;
-
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.Utils;
 
 import org.junit.Assert;
@@ -31,7 +30,7 @@ public class MultisigAddressTest {
             TestCase c = cases[i];
             Assert.assertArrayEquals("script program not match", c.script, c.pubs.getMultiSigScript().getProgram());
             System.out.println("\nscript program match: " + Utils.bytesToHexString(c.script));
-            String a = c.pubs.getAddress();
+            String a = c.pubs.getAddress(PrimerjSettings.NetType.BITCOIN);
             assertEquals("address not match", a, c.address);
             System.out.println("\naddress match: " + a);
         }

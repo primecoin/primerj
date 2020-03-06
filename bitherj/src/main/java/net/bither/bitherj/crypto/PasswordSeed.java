@@ -18,12 +18,8 @@ package net.bither.bitherj.crypto;
 
 
 import net.bither.bitherj.db.AbstractDb;
-import net.bither.bitherj.utils.Base58;
-import net.bither.bitherj.utils.PrivateKeyUtil;
-import net.bither.bitherj.utils.Utils;
-
-import net.bither.bitherj.db.AbstractDb;
 import net.bither.bitherj.exception.AddressFormatException;
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.qrcode.QRCodeUtil;
 import net.bither.bitherj.utils.Base58;
 import net.bither.bitherj.utils.PrivateKeyUtil;
@@ -47,12 +43,16 @@ public class PasswordSeed {
     }
 
     public boolean checkPassword(CharSequence password) {
+        return checkPassword(password, Utils.getNetType());
+    }
+
+    public boolean checkPassword(CharSequence password, PrimerjSettings.NetType coinType) {
         ECKey ecKey = PrivateKeyUtil.getECKeyFromSingleString(keyStr, password);
         String ecKeyAddress;
         if (ecKey == null) {
             return false;
         } else {
-            ecKeyAddress = ecKey.toAddress();
+            ecKeyAddress = ecKey.toAddress(coinType);
             ecKey.clearPrivateKey();
         }
         return Utils.compareString(this.address,

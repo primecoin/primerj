@@ -27,18 +27,8 @@ import net.bither.bitherj.core.Tx;
 import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.crypto.TransactionSignature;
 import net.bither.bitherj.db.AbstractDb;
-import net.bither.bitherj.utils.UnsafeByteArrayOutputStream;
-import net.bither.bitherj.utils.Utils;
-
-import net.bither.bitherj.core.Coin;
-import net.bither.bitherj.core.In;
-import net.bither.bitherj.core.Out;
-import net.bither.bitherj.core.SplitCoin;
-import net.bither.bitherj.core.Tx;
-import net.bither.bitherj.crypto.ECKey;
-import net.bither.bitherj.crypto.TransactionSignature;
-import net.bither.bitherj.db.AbstractDb;
 import net.bither.bitherj.exception.ScriptException;
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.UnsafeByteArrayOutputStream;
 import net.bither.bitherj.utils.Utils;
 
@@ -384,17 +374,21 @@ public class Script {
     }
 
     public String getFromAddress() throws ScriptException {
+        return getFromAddress(Utils.getNetType());
+    }
+
+    public String getFromAddress(PrimerjSettings.NetType coinType) throws ScriptException {
         if (this.chunks.size() == 2
                 && this.chunks.get(0).data != null && this.chunks.get(0).data.length > 2
                 && this.chunks.get(1).data != null && this.chunks.get(1).data.length > 2) {
-            return Utils.toAddress(Utils.sha256hash160(this.chunks.get(1).data));
+            return Utils.toAddress(Utils.sha256hash160(this.chunks.get(1).data), coinType);
         } else if (this.chunks.size() >= 3 && this.chunks.get(0).opcode == OP_0) {
             boolean isPay2SHScript = true;
             for (int i = 1; i < this.chunks.size(); i++) {
                 isPay2SHScript &= (this.chunks.get(i).data != null && this.chunks.get(i).data.length > 2);
             }
             if (isPay2SHScript) {
-                return Utils.toP2SHAddress(Utils.sha256hash160(this.chunks.get(this.chunks.size() - 1).data));
+                return Utils.toP2SHAddress(Utils.sha256hash160(this.chunks.get(this.chunks.size() - 1).data), coinType);
             }
         }
         return null;
@@ -404,8 +398,12 @@ public class Script {
      * Gets the destination address from this script, if it's in the required form (see getPubKey).
      */
     public String getToAddress() throws ScriptException {
+        return getToAddress(Utils.getNetType());
+    }
+
+    public String getToAddress(PrimerjSettings.NetType coinType) throws ScriptException {
         if (isSentToAddress())
-            return Utils.toAddress(getPubKeyHash());
+            return Utils.toAddress(getPubKeyHash(), coinType);
         else if (isSentToP2SH())
             return Utils.toP2SHAddress(this.getPubKeyHash());
         else

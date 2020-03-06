@@ -45,7 +45,7 @@ public abstract class ISetting {
 
     public abstract PrimerjSettings.TransactionFeePrecision getTransactionFeePrecision();
 
-    public abstract boolean isTestNet();
+    public abstract PrimerjSettings.NetType getNetType();
 
     public abstract PrimerjSettings.ApiConfig getApiConfig();
 

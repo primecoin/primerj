@@ -17,8 +17,6 @@
 package net.bither.bitherj.core;
 
 import net.bither.bitherj.PrimerjSettings;
-
-import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.exception.ProtocolException;
 import net.bither.bitherj.exception.ScriptException;
@@ -157,10 +155,14 @@ public class Out extends Message {
     }
 
     public String getOutAddress() {
+        return getOutAddress(Utils.getNetType());
+    }
+
+    public String getOutAddress(PrimerjSettings.NetType coinType) {
         if (outAddress == null) {
             try {
                 Script pubKeyScript = new Script(this.getOutScript());
-                outAddress = pubKeyScript.getToAddress();
+                outAddress = pubKeyScript.getToAddress(coinType);
             } catch (ScriptException e) {
 //                if (this.getOutScript() != null) {
 //                    log.warn("out script : " + Utils.bytesToHexString(this.getOutScript()));

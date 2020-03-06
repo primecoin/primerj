@@ -22,13 +22,6 @@ import net.bither.bitherj.core.AddressManager;
 import net.bither.bitherj.core.HDAccount;
 import net.bither.bitherj.core.HDAccountCold;
 import net.bither.bitherj.core.HDMKeychain;
-
-import net.bither.bitherj.PrimerjSettings;
-import net.bither.bitherj.core.Address;
-import net.bither.bitherj.core.AddressManager;
-import net.bither.bitherj.core.HDAccount;
-import net.bither.bitherj.core.HDAccountCold;
-import net.bither.bitherj.core.HDMKeychain;
 import net.bither.bitherj.crypto.DumpedPrivateKey;
 import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.crypto.EncryptedData;
@@ -131,9 +124,9 @@ public class PrivateKeyUtil {
             AddressFormatException, InterruptedException {
         SecureCharSequence decrypted = getDecryptPrivateKeyString(address.getFullEncryptPrivKey()
                 , password);
-        String bip38 = Bip38.encryptNoEcMultiply(password, decrypted.toString());
+        String bip38 = Bip38.encryptNoEcMultiply(password, decrypted.toString(), Utils.getNetType());
         if (PrimerjSettings.DEV_DEBUG) {
-            SecureCharSequence d = Bip38.decrypt(bip38, password);
+            SecureCharSequence d = Bip38.decrypt(bip38, password, Utils.getNetType());
             if (d.equals(decrypted)) {
                 log.info("BIP38 right");
             } else {

@@ -17,9 +17,7 @@
 package net.bither.bitherj.core;
 
 import net.bither.bitherj.db.AbstractDb;
-import net.bither.bitherj.utils.Utils;
-
-import net.bither.bitherj.db.AbstractDb;
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.Utils;
 
 import org.junit.Test;
@@ -71,7 +69,7 @@ public class TxTest {
         byte[] exceptTxHash = Utils.reverseBytes(Utils.hexStringToByteArray("584985ca8a9ed57987da36ea3d13fe05a7c498f2098ddeb6c8d0f3214067640c"));
         byte[] txHash = tx.getTxHash();
         for (Out out : tx.getOuts()) {
-            String outAddress = out.getOutAddress();
+            String outAddress = out.getOutAddress(PrimerjSettings.NetType.BITCOIN);
         }
         assertTrue(Arrays.equals(exceptTxHash, txHash));
     }
