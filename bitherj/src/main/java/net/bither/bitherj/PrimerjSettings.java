@@ -102,13 +102,15 @@ public class PrimerjSettings {
         }
     }
 
+    public static int getDumpedPrivateKeyHeader(NetType coinType) {
+        return (128 + getAddressHeader(coinType));
+    }
+
     public static long getPacketMagic() {
         if(Utils.isTestNet()) return testNetPacketMagic;
         else return packetMagic;
     }
 
-    public static final int dumpedPrivateKeyHeader = 151;
-//    public static final int dumpedPrivateKeyHeader = 128;
     public static final int TARGET_TIMESPAN = 14 * 24 * 60 * 60;  // legacy bitcoin: 2 weeks per difficulty cycle, on average.
     public static final int TARGET_SPACING = 1 * 60;  // primecoin block spacing
     public static final int BLOCK_DIFFICULTY_INTERVAL = 2016; // legacy bitcoin

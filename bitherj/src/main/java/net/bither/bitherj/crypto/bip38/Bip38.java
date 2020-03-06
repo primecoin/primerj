@@ -57,7 +57,7 @@ public class Bip38 {
      * @throws InterruptedException
      */
     public static String encryptNoEcMultiply(CharSequence passphrase, String base58EncodedPrivateKey, PrimerjSettings.NetType coinType) throws InterruptedException, AddressFormatException {
-        DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(base58EncodedPrivateKey);
+        DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(base58EncodedPrivateKey, coinType);
         ECKey key = dumpedPrivateKey.getKey();
         dumpedPrivateKey.clearPrivateKey();
         byte[] salt = Bip38.calculateScryptSalt(key.toAddress(coinType));

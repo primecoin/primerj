@@ -24,16 +24,7 @@ import net.bither.bitherj.api.UploadHDMBidApi;
 import net.bither.bitherj.core.https.HttpsTest;
 import net.bither.bitherj.crypto.DumpedPrivateKey;
 import net.bither.bitherj.crypto.ECKey;
-import net.bither.bitherj.utils.Utils;
-
-import net.bither.bitherj.api.CreateHDMAddressApi;
-import net.bither.bitherj.api.GetHDMBIdRandomApi;
-import net.bither.bitherj.api.RecoveryHDMApi;
-import net.bither.bitherj.api.SignatureHDMApi;
-import net.bither.bitherj.api.UploadHDMBidApi;
-import net.bither.bitherj.core.https.HttpsTest;
-import net.bither.bitherj.crypto.DumpedPrivateKey;
-import net.bither.bitherj.crypto.ECKey;
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.Utils;
 
 import org.junit.Test;
@@ -51,8 +42,8 @@ public class HDMIdTest {
     public void testCreateHDAddress() {
         try {
             HttpsTest.trust();
-            ECKey ecKey = new DumpedPrivateKey("L4rK1yDtCWekvXuE6oXD9jCYfFNV2cWRpVuPLBcCU2z8TrisoyY1").getKey();
-            String address = ecKey.toAddress();
+            ECKey ecKey = new DumpedPrivateKey("L4rK1yDtCWekvXuE6oXD9jCYfFNV2cWRpVuPLBcCU2z8TrisoyY1", PrimerjSettings.NetType.BITCOIN).getKey();
+            String address = ecKey.toAddress(PrimerjSettings.NetType.BITCOIN);
             GetHDMBIdRandomApi getHDMBIdRandomApi = new GetHDMBIdRandomApi(address);
             getHDMBIdRandomApi.handleHttpGet();
             long randomKey = getHDMBIdRandomApi.getResult();
@@ -102,8 +93,8 @@ public class HDMIdTest {
     public void testRecoveryHDM() {
         try {
             HttpsTest.trust();
-            ECKey ecKey = new DumpedPrivateKey("L4rK1yDtCWekvXuE6oXD9jCYfFNV2cWRpVuPLBcCU2z8TrisoyY1").getKey();
-            String address = ecKey.toAddress();
+            ECKey ecKey = new DumpedPrivateKey("L4rK1yDtCWekvXuE6oXD9jCYfFNV2cWRpVuPLBcCU2z8TrisoyY1", PrimerjSettings.NetType.BITCOIN).getKey();
+            String address = ecKey.toAddress(PrimerjSettings.NetType.BITCOIN);
             System.out.println("eckey:" + address);
             byte[] decryptedPassword = new byte[32];
             for (int i = 0; i < decryptedPassword.length; i++) {

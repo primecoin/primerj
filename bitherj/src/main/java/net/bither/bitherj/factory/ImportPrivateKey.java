@@ -24,15 +24,7 @@ import net.bither.bitherj.crypto.PasswordSeed;
 import net.bither.bitherj.crypto.SecureCharSequence;
 import net.bither.bitherj.qrcode.QRCodeUtil;
 import net.bither.bitherj.utils.PrivateKeyUtil;
-
-import net.bither.bitherj.core.Address;
-import net.bither.bitherj.core.AddressManager;
-import net.bither.bitherj.crypto.DumpedPrivateKey;
-import net.bither.bitherj.crypto.ECKey;
-import net.bither.bitherj.crypto.PasswordSeed;
-import net.bither.bitherj.crypto.SecureCharSequence;
-import net.bither.bitherj.qrcode.QRCodeUtil;
-import net.bither.bitherj.utils.PrivateKeyUtil;
+import net.bither.bitherj.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,14 +207,14 @@ public abstract class ImportPrivateKey {
         try {
             switch (this.importPrivateKeyType) {
                 case Text:
-                    dumpedPrivateKey = new DumpedPrivateKey(this.content);
+                    dumpedPrivateKey = new DumpedPrivateKey(this.content, Utils.getNetType());
                     ecKey = dumpedPrivateKey.getKey();
                     break;
                 case BitherQrcode:
                     ecKey = PrivateKeyUtil.getECKeyFromSingleString(content, password);
                     break;
                 case Bip38:
-                    dumpedPrivateKey = new DumpedPrivateKey(this.content);
+                    dumpedPrivateKey = new DumpedPrivateKey(this.content, Utils.getNetType());
                     ecKey = dumpedPrivateKey.getKey();
                     break;
             }

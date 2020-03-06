@@ -981,7 +981,7 @@ public class Utils {
 
     public static boolean validBitcoinPrivateKey(String str) {
         try {
-            DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(str);
+            DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(str, getNetType());
             dumpedPrivateKey.clearPrivateKey();
             return true;
         } catch (AddressFormatException e) {

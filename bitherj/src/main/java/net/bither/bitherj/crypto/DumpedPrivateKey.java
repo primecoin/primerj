@@ -20,10 +20,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 import net.bither.bitherj.PrimerjSettings;
-import net.bither.bitherj.utils.Base58;
-import net.bither.bitherj.utils.Utils;
-
-import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.exception.AddressFormatException;
 import net.bither.bitherj.utils.Base58;
 import net.bither.bitherj.utils.Utils;
@@ -46,7 +42,7 @@ public class DumpedPrivateKey {
 
     // Used by ECKey.getPrivateKeyEncoded()
     public DumpedPrivateKey(byte[] keyBytes, boolean compressed) {
-        version = PrimerjSettings.dumpedPrivateKeyHeader;
+        version = PrimerjSettings.getDumpedPrivateKeyHeader(Utils.getNetType());
         bytes = encode(keyBytes, compressed);
         checkArgument(version < 256 && version >= 0);
         this.compressed = compressed;
@@ -72,16 +68,16 @@ public class DumpedPrivateKey {
      * @param encoded The base58 encoded string.
      * @throws net.bither.bitherj.exception.AddressFormatException If the string is invalid or the header byte doesn't match the network params.
      */
-    public DumpedPrivateKey(String encoded) throws AddressFormatException {
+    public DumpedPrivateKey(String encoded, PrimerjSettings.NetType coinType) throws AddressFormatException {
         //todo string encoded
         byte[] tmp = Base58.decodeChecked(encoded);
         version = tmp[0] & 0xFF;
         bytes = new byte[tmp.length - 1];
         System.arraycopy(tmp, 1, bytes, 0, tmp.length - 1);
 
-        if (version != PrimerjSettings.dumpedPrivateKeyHeader)
+        if (version != PrimerjSettings.getDumpedPrivateKeyHeader(coinType))
             throw new AddressFormatException("Mismatched version number, trying to cross networks? " + version +
-                    " vs " + PrimerjSettings.dumpedPrivateKeyHeader);
+                    " vs " + PrimerjSettings.getDumpedPrivateKeyHeader(coinType));
         if (bytes.length == 33 && bytes[32] == 1) {
             compressed = true;
             bytes = Arrays.copyOf(bytes, 32);  // Chop off the additional marker byte.
