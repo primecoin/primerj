@@ -72,8 +72,8 @@ public class TestImplAbstractApp extends AbstractApp {
             }
 
             @Override
-            public boolean isTestNet() {
-                return false;
+            public PrimerjSettings.NetType getNetType() {
+                return PrimerjSettings.NetType.MAINNET;
             }
 
             @Override

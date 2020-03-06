@@ -22,13 +22,8 @@ import com.lambdaworks.crypto.SCrypt;
 import net.bither.bitherj.crypto.DumpedPrivateKey;
 import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.crypto.SecureCharSequence;
-import net.bither.bitherj.utils.Sha256Hash;
-import net.bither.bitherj.utils.Utils;
-
-import net.bither.bitherj.crypto.DumpedPrivateKey;
-import net.bither.bitherj.crypto.ECKey;
-import net.bither.bitherj.crypto.SecureCharSequence;
 import net.bither.bitherj.exception.AddressFormatException;
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.Utils;
 
@@ -61,11 +56,11 @@ public class Bip38 {
      *
      * @throws InterruptedException
      */
-    public static String encryptNoEcMultiply(CharSequence passphrase, String base58EncodedPrivateKey) throws InterruptedException, AddressFormatException {
+    public static String encryptNoEcMultiply(CharSequence passphrase, String base58EncodedPrivateKey, PrimerjSettings.NetType coinType) throws InterruptedException, AddressFormatException {
         DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(base58EncodedPrivateKey);
         ECKey key = dumpedPrivateKey.getKey();
         dumpedPrivateKey.clearPrivateKey();
-        byte[] salt = Bip38.calculateScryptSalt(key.toAddress());
+        byte[] salt = Bip38.calculateScryptSalt(key.toAddress(coinType));
         byte[] stretchedKeyMaterial = bip38Stretch1(passphrase, salt, SCRYPT_LENGTH);
         return encryptNoEcMultiply(stretchedKeyMaterial, key, salt);
     }
@@ -266,20 +261,20 @@ public class Bip38 {
      *
      * @throws InterruptedException
      */
-    public static SecureCharSequence decrypt(String bip38PrivateKeyString, CharSequence passphrase) throws InterruptedException, AddressFormatException {
+    public static SecureCharSequence decrypt(String bip38PrivateKeyString, CharSequence passphrase, PrimerjSettings.NetType coinType) throws InterruptedException, AddressFormatException {
         Bip38PrivateKey bip38Key = parseBip38PrivateKey(bip38PrivateKeyString);
         if (bip38Key == null) {
             return null;
         }
         if (bip38Key.ecMultiply) {
-            return decryptEcMultiply(bip38Key, passphrase);
+            return decryptEcMultiply(bip38Key, passphrase, coinType);
         } else {
             byte[] stretcedKeyMaterial = bip38Stretch1(passphrase, bip38Key.salt, SCRYPT_LENGTH);
-            return decryptNoEcMultiply(bip38Key, stretcedKeyMaterial);
+            return decryptNoEcMultiply(bip38Key, stretcedKeyMaterial, coinType);
         }
     }
 
-    public static SecureCharSequence decryptEcMultiply(Bip38PrivateKey bip38Key, CharSequence passphrase
+    public static SecureCharSequence decryptEcMultiply(Bip38PrivateKey bip38Key, CharSequence passphrase, PrimerjSettings.NetType coinType
     ) throws InterruptedException, AddressFormatException {
         // Get 8 byte Owner Salt
         byte[] ownerEntropy = new byte[8];
@@ -372,7 +367,7 @@ public class Bip38 {
 
         // Validate result
 
-        byte[] newSalt = calculateScryptSalt(ecKey.toAddress());
+        byte[] newSalt = calculateScryptSalt(ecKey.toAddress(coinType));
         if (!Arrays.equals(bip38Key.salt, newSalt)) {
             // The passphrase is either invalid or we are on the wrong network
             return null;
@@ -385,7 +380,7 @@ public class Bip38 {
         return secureCharSequence;
     }
 
-    public static SecureCharSequence decryptNoEcMultiply(Bip38PrivateKey bip38Key, byte[] stretcedKeyMaterial) throws AddressFormatException {
+    public static SecureCharSequence decryptNoEcMultiply(Bip38PrivateKey bip38Key, byte[] stretcedKeyMaterial, PrimerjSettings.NetType coinType) throws AddressFormatException {
         // Derive Keys
         byte[] derivedHalf1 = new byte[32];
         System.arraycopy(stretcedKeyMaterial, 0, derivedHalf1, 0, 32);
@@ -421,7 +416,7 @@ public class Bip38 {
 
         // Validate result
 
-        byte[] newSalt = calculateScryptSalt(key.toAddress());
+        byte[] newSalt = calculateScryptSalt(key.toAddress(coinType));
         if (!Arrays.equals(bip38Key.salt, newSalt)) {
             // The passphrase is either invalid or we are on the wrong network
             return null;

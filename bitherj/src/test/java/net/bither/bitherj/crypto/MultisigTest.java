@@ -1,9 +1,6 @@
 package net.bither.bitherj.crypto;
 
-import net.bither.bitherj.script.Script;
-import net.bither.bitherj.script.ScriptBuilder;
-import net.bither.bitherj.utils.Utils;
-
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.script.Script;
 import net.bither.bitherj.script.ScriptBuilder;
 import net.bither.bitherj.utils.Utils;
@@ -35,7 +32,7 @@ public class MultisigTest {
         pubKeyList.add(keyRemote.getPubKey());
 
         Script script = ScriptBuilder.createMultiSigOutputScript(2, pubKeyList);
-        String multisigAddress = Utils.toP2SHAddress(Utils.sha256hash160(script.getProgram()));
+        String multisigAddress = Utils.toP2SHAddress(Utils.sha256hash160(script.getProgram()), PrimerjSettings.NetType.BITCOIN);
 
         assertEquals(address, multisigAddress);
 
@@ -53,7 +50,7 @@ public class MultisigTest {
         pubKeyList.add(keyRemote.getPubKey());
 
         script = ScriptBuilder.createMultiSigOutputScript(2, pubKeyList);
-        multisigAddress = Utils.toP2SHAddress(Utils.sha256hash160(script.getProgram()));
+        multisigAddress = Utils.toP2SHAddress(Utils.sha256hash160(script.getProgram()), PrimerjSettings.NetType.BITCOIN);
 
         assertEquals(address, multisigAddress);
 
@@ -71,7 +68,7 @@ public class MultisigTest {
         pubKeyList.add(keyRemote.getPubKey());
 
         script = ScriptBuilder.createMultiSigOutputScript(2, pubKeyList);
-        multisigAddress = Utils.toP2SHAddress(Utils.sha256hash160(script.getProgram()));
+        multisigAddress = Utils.toP2SHAddress(Utils.sha256hash160(script.getProgram()), PrimerjSettings.NetType.BITCOIN);
 
         assertEquals(address, multisigAddress);
     }

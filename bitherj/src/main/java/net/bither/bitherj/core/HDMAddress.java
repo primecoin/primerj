@@ -1,11 +1,10 @@
 package net.bither.bitherj.core;
 
-import net.bither.bitherj.db.AbstractDb;
-
 import net.bither.bitherj.crypto.TransactionSignature;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.db.AbstractDb;
 import net.bither.bitherj.exception.PasswordException;
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.script.Script;
 import net.bither.bitherj.script.ScriptBuilder;
 import net.bither.bitherj.utils.Utils;
@@ -203,7 +202,11 @@ public class HDMAddress extends Address {
         }
 
         public String getAddress() {
-            return Utils.toP2SHAddress(Utils.sha256hash160(getMultiSigScript().getProgram()));
+            return getAddress(Utils.getNetType());
+        }
+
+        public String getAddress(PrimerjSettings.NetType coinType) {
+            return Utils.toP2SHAddress(Utils.sha256hash160(getMultiSigScript().getProgram()), coinType);
         }
     }
 

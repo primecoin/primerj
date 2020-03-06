@@ -25,17 +25,7 @@ import net.bither.bitherj.core.Tx;
 import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.exception.ScriptException;
 import net.bither.bitherj.exception.VerificationException;
-import net.bither.bitherj.utils.Base58;
-import net.bither.bitherj.utils.Sha256Hash;
-import net.bither.bitherj.utils.UnsafeByteArrayOutputStream;
-import net.bither.bitherj.utils.Utils;
-
-import net.bither.bitherj.core.In;
-import net.bither.bitherj.core.OutPoint;
-import net.bither.bitherj.core.Tx;
-import net.bither.bitherj.crypto.ECKey;
-import net.bither.bitherj.exception.ScriptException;
-import net.bither.bitherj.exception.VerificationException;
+import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.Base58;
 import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.UnsafeByteArrayOutputStream;
@@ -561,7 +551,7 @@ public class ScriptTest {
     public void testFromAddress() {
         byte[] rawTx = Utils.hexStringToByteArray("0100000001f98a280010ea7397485a2cbde9e6355deeca50b9b73eba5011f2248da1c9d12c00000000fc00463043021f149e45355bbb45b9d70aa2a30a707da871a7e97bf6e5e82ee679ffe078794f02202e94a43d1df4a9659cf187026bea5581c0db7050b70ae4a8c2340dd7353577bf0148304502210087d0e3f03c68a8962dc203a5491ea31d39f78652f241b5aff2b04a2f77a113990220335e5191ab93b54e9fdee18c06c1713ed1da85e92fb2f96ecff3e7f82362c81c014c695221031b2e51069f115a662fafdbe92347ddcbca693df1cfb96a0c41ce46b57fd746e2210202d41f339f2ca186eacf1fe31f8ff5e8ddf376745a96642a7439c3be7bad70662102951d6cbde04a9fdcf036befb767c96f17a4a3d20ab1a01c147f38b6c035e652853aeffffffff02102700000000000017a9145b39adef84a2728e5b147c1d57c11a1660bb31c787a85b01000000000017a914bc6333c8a2fd1b9be0094bfe6d846ff0298636768700000000");
         Tx tx = new Tx(rawTx);
-        String fromAddress = new Script(tx.getIns().get(0).getInSignature()).getFromAddress();
+        String fromAddress = new Script(tx.getIns().get(0).getInSignature()).getFromAddress(PrimerjSettings.NetType.BITCOIN);
 
         String expected = "3Js7oJY1qc5VH1erNuLCkTm3cHMZvApn1X";
         assertEquals(expected, fromAddress);
