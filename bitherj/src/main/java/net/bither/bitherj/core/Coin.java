@@ -1,8 +1,6 @@
 package net.bither.bitherj.core;
 
 import net.bither.bitherj.PrimerjSettings;
-
-import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.crypto.TransactionSignature;
 import net.bither.bitherj.utils.Utils;
 
@@ -82,7 +80,7 @@ public enum Coin {
             case BTW:
                 return PrimerjSettings.btwP2shHeader;
             default:
-                return PrimerjSettings.btcP2shHeader;
+                return PrimerjSettings.getP2shHeader(Utils.getNetType());
         }
     }
 
@@ -97,7 +95,7 @@ public enum Coin {
             case BTW:
                 return PrimerjSettings.btwAddressHeader;
             default:
-                return PrimerjSettings.btcAddressHeader;
+                return PrimerjSettings.getAddressHeader(Utils.getNetType());
         }
     }
 
