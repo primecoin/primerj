@@ -5,8 +5,6 @@ import com.google.common.collect.Lists;
 
 import net.bither.bitherj.utils.Utils;
 
-import net.bither.bitherj.utils.Utils;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
@@ -177,9 +176,9 @@ public class MnemonicCodeTest {
             byte[] seed = MnemonicCode.toSeed(code, "TREZOR");
             byte[] entropy = mc.toEntropy(split(vecCode));
 
-            assertEquals(vecData, Utils.bytesToHexString(entropy));
+            assertEquals(vecData.toUpperCase(Locale.ENGLISH), Utils.bytesToHexString(entropy));
             assertEquals(vecCode, Joiner.on(' ').join(code));
-            assertEquals(vecSeed, Utils.bytesToHexString(seed));
+            assertEquals(vecSeed.toUpperCase(Locale.ENGLISH), Utils.bytesToHexString(seed));
         }
     }
 
