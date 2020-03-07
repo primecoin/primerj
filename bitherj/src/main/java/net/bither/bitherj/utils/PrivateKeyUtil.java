@@ -105,7 +105,7 @@ public class PrivateKeyUtil {
         ECKey ecKey = null;
         SecureCharSequence privateKeyText = null;
         if (needPrivteKeyText) {
-            DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(decrypted, isCompressed);
+            DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(decrypted, isCompressed, Utils.getNetType());
             privateKeyText = dumpedPrivateKey.toSecureCharSequence();
             dumpedPrivateKey.clearPrivateKey();
         } else {

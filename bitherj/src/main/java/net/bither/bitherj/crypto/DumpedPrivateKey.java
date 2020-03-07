@@ -41,8 +41,8 @@ public class DumpedPrivateKey {
     protected byte[] bytes;
 
     // Used by ECKey.getPrivateKeyEncoded()
-    public DumpedPrivateKey(byte[] keyBytes, boolean compressed) {
-        version = PrimerjSettings.getDumpedPrivateKeyHeader(Utils.getNetType());
+    public DumpedPrivateKey(byte[] keyBytes, boolean compressed, PrimerjSettings.NetType coinType) {
+        version = PrimerjSettings.getDumpedPrivateKeyHeader(coinType);
         bytes = encode(keyBytes, compressed);
         checkArgument(version < 256 && version >= 0);
         this.compressed = compressed;
