@@ -372,7 +372,7 @@ public class Bip38 {
             // The passphrase is either invalid or we are on the wrong network
             return null;
         }
-        DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(ecKey.getPrivKeyBytes(), ecKey.isCompressed());
+        DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(ecKey.getPrivKeyBytes(), ecKey.isCompressed(), coinType);
         // The result is returned in SIPA format
         SecureCharSequence secureCharSequence = dumpedPrivateKey.toSecureCharSequence();
         dumpedPrivateKey.clearPrivateKey();
@@ -423,7 +423,7 @@ public class Bip38 {
         }
 
         // Get SIPA format
-        DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(key.getPrivKeyBytes(), key.isCompressed());
+        DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(key.getPrivKeyBytes(), key.isCompressed(), coinType);
 
         SecureCharSequence secureCharSequence = dumpedPrivateKey.toSecureCharSequence();
         dumpedPrivateKey.clearPrivateKey();
