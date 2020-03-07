@@ -405,7 +405,7 @@ public class Script {
         if (isSentToAddress())
             return Utils.toAddress(getPubKeyHash(), coinType);
         else if (isSentToP2SH())
-            return Utils.toP2SHAddress(this.getPubKeyHash());
+            return Utils.toP2SHAddress(this.getPubKeyHash(), coinType);
         else
             throw new ScriptException("Cannot cast this script to a pay-to-address type");
     }
