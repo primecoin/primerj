@@ -566,4 +566,17 @@ public class ScriptTest {
         assertEquals(expected, fromAddress);
         assertEquals("de5004877260f86d59479db1eb95082d128131a637484cbe98617f7b6837bddf".toUpperCase(Locale.ENGLISH), Utils.hashToString(tx.getTxHash()));
     }
+
+    // Pay to public key (p2pk) type output (Primecoin testnet)
+    static final String p2pkProg = "210328A166DE2E9DD2DCD66C6FCC81C975ECDF7BF9A29022D7CCB6AD0EB6334598BFAC";
+
+    @Test
+    public void testScriptP2pk() throws Exception {
+        // Check that we can extract the to address
+        byte[] p2pkBytes = Utils.hexStringToByteArray(p2pkProg);
+        Script p2pk = new Script(p2pkBytes);
+        assertEquals("PUSHDATA(33)[0328A166DE2E9DD2DCD66C6FCC81C975ECDF7BF9A29022D7CCB6AD0EB6334598BF] CHECKSIG", p2pk.toString());
+        String toAddr = p2pk.getToAddress(PrimerjSettings.NetType.TESTNET);
+        assertEquals("mkhQpfzBmjbngtjweuCxMZ7AdgMuMeSyLw", toAddr);
+    }
 }

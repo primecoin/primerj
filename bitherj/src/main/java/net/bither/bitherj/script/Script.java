@@ -295,6 +295,8 @@ public class Script {
     public byte[] getPubKeyHash() throws ScriptException {
         if (isSentToAddress())
             return chunks.get(2).data;
+        else if (isSentToRawPubKey())
+            return Utils.sha256hash160(chunks.get(0).data);
         else if (isPayToScriptHash())
             return chunks.get(1).data;
         else
@@ -402,7 +404,7 @@ public class Script {
     }
 
     public String getToAddress(PrimerjSettings.NetType coinType) throws ScriptException {
-        if (isSentToAddress())
+        if (isSentToAddress() || isSentToRawPubKey())
             return Utils.toAddress(getPubKeyHash(), coinType);
         else if (isSentToP2SH())
             return Utils.toP2SHAddress(this.getPubKeyHash(), coinType);
