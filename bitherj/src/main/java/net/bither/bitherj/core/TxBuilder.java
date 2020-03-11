@@ -112,7 +112,7 @@ public class TxBuilder {
         return emptyWalletTxs;
     }
 
-    private List<Tx> getEmptyWalletTxs(List<String> addresses, String changeAddress, List<Out> unspendOuts, int splitNumber, SplitCoin splitCoin) {
+    private List<Tx> getEmptyWalletTxs(List<String> addresses, String changeAddress, List<Out> unspendOuts, int splitNumber, SplitCoin splitCoin) throws TxBuilderException {
         List<Tx> emptyWalletTxs = new ArrayList<Tx>();
         int count = (unspendOuts.size() % splitNumber == (splitNumber - 1) && splitNumber != 1) ? (unspendOuts.size() / splitNumber + 1) : unspendOuts.size() / splitNumber;
         for (int i = 0; i < splitNumber; i++) {
@@ -260,7 +260,7 @@ public class TxBuilder {
         return txs;
     }
 
-    private List<Tx> getEmptyWalletTxs(Address address, String changeAddress, List<Tx> unspendTxs, List<String> addresses, Script scriptPubKey, int splitNumber, Coin coin) {
+    private List<Tx> getEmptyWalletTxs(Address address, String changeAddress, List<Tx> unspendTxs, List<String> addresses, Script scriptPubKey, int splitNumber, Coin coin) throws TxBuilderException {
         List<Tx> emptyWalletTxs = new ArrayList<Tx>();
         int count = (unspendTxs.size() % splitNumber == (splitNumber - 1) && splitNumber != 1) ? (unspendTxs.size() / splitNumber + 1) : unspendTxs.size() / splitNumber;
         for (int i = 0; i < splitNumber; i++) {
@@ -386,11 +386,11 @@ public class TxBuilder {
 }
 
 interface TxBuilderProtocol {
-    public Tx buildTx(Address address, String changeAddress, List<Tx> unspendTxs, Tx tx, Coin... coin);
+    public Tx buildTx(Address address, String changeAddress, List<Tx> unspendTxs, Tx tx, Coin... coin) throws TxBuilderException;
 
     public Tx buildBCCTx(Address address, String changeAddress, List<Out> unspendOuts, Tx tx, Coin... coin);
 
-    public Tx buildTx(String changeAddress, List<Out> unspendOuts, Tx tx, Coin... coin);
+    public Tx buildTx(String changeAddress, List<Out> unspendOuts, Tx tx, Coin... coin) throws TxBuilderException;
 }
 
 class TxBuilderEmptyWallet implements TxBuilderProtocol {
@@ -537,7 +537,7 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
 }
 
 class TxBuilderDefault implements TxBuilderProtocol {
-    public Tx buildTx(Address address, String changeAddress, List<Tx> unspendTxs, Tx tx, Coin... coin) {
+    public Tx buildTx(Address address, String changeAddress, List<Tx> unspendTxs, Tx tx, Coin... coin) throws TxBuilderException {
         boolean isCompressed = address.isCompressed();
         Script scriptPubKey = null;
         if (address.isHDM()) {
@@ -611,7 +611,7 @@ class TxBuilderDefault implements TxBuilderProtocol {
             List<Out> selectedOuts = this.selectOuts(outs, valueNeeded);
 
             if (TxBuilder.getAmount(selectedOuts) < valueNeeded)
-                break;
+                throw new TxBuilderException.TxBuilderNotEnoughMoneyException(valueNeeded - TxBuilder.getAmount(selectedOuts));
 
             boolean eitherCategory2Or3 = false;
             boolean isCategory3 = false;
@@ -754,7 +754,7 @@ class TxBuilderDefault implements TxBuilderProtocol {
     }
 
     @Override
-    public Tx buildTx(String changeAddress, List<Out> unspendOuts, Tx tx, Coin... coin) {
+    public Tx buildTx(String changeAddress, List<Out> unspendOuts, Tx tx, Coin... coin) throws TxBuilderException {
         List<Out> outs = unspendOuts;
 
         long additionalValueForNextCategory = 0;
@@ -791,7 +791,7 @@ class TxBuilderDefault implements TxBuilderProtocol {
             List<Out> selectedOuts = this.selectOuts(outs, valueNeeded);
 
             if (TxBuilder.getAmount(selectedOuts) < valueNeeded)
-                break;
+                throw new TxBuilderException.TxBuilderNotEnoughMoneyException(valueNeeded - TxBuilder.getAmount(selectedOuts));
 
             boolean eitherCategory2Or3 = false;
             boolean isCategory3 = false;
