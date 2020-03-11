@@ -422,6 +422,7 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
         // calculate transaction fee based on estimated transaction size and fee per byte
         if (size > 0) {
             fees = size * (Utils.getFeeBase() / 1000);
+            fees = Utils.ceilingFee(fees);
         }
 
         // note : like bitcoinj, empty wallet will not check min output
@@ -516,6 +517,7 @@ class TxBuilderEmptyWallet implements TxBuilderProtocol {
         int size = TxBuilder.estimationTxSize(outs.size(), tx.getOuts().size());
         if (size > 0) {
             fees = size * (Utils.getFeeBase() / 1000);
+            fees = Utils.ceilingFee(fees);
         }
 
         // note : like bitcoinj, empty wallet will not check min output
