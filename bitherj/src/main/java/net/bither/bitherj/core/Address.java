@@ -449,7 +449,7 @@ public class Address implements Comparable<Address> {
 
     public void signTx(Tx tx, CharSequence passphrase, Coin coin) {
         if (coin == Coin.BTC) {
-            tx.signWithSignatures(this.signHashes(tx.getUnsignedInHashes(), passphrase, TransactionSignature.SigHash.ALL));
+            tx.signInputs(TransactionSignature.SigHash.ALL, this, passphrase);
         } else {
             tx.signWithSignatures(this.signHashes(tx.getSplitCoinForkUnsignedInHashes(coin.getSplitCoin()), passphrase, coin.getSigHash()));
         }
