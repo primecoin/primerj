@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class KeyCrypterScrypt implements KeyCrypter, Serializable {
     private static final Logger log = LoggerFactory.getLogger(KeyCrypterScrypt.class);
     private static final long serialVersionUID = 949662512049152670L;
-    private static final int BITCOINJ_SCRYPT_N = 16384;
+    private static final int BITCOINJ_SCRYPT_N = 1024;
     private static final int BITCOINJ_SCRYPT_R = 8;
     private static final int BITCOINJ_SCRYPT_P = 1;
 
