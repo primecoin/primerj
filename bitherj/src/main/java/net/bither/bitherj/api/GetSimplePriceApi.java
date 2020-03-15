@@ -18,15 +18,11 @@ package net.bither.bitherj.api;
 
 import net.bither.bitherj.api.http.HttpGetResponse;
 import net.bither.bitherj.api.http.PrimerUrl;
-import net.bither.bitherj.core.Peer;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GetSimplePriceApi extends HttpGetResponse<String> {
 
-    private static final Logger log = LoggerFactory.getLogger(GetSimplePriceApi.class);
     private static final String CNYPRICE = "cny";
     private static final String USDPRICE = "usd";
     private static final String COINID = "primecoin";
@@ -43,7 +39,6 @@ public class GetSimplePriceApi extends HttpGetResponse<String> {
         JSONObject json = new JSONObject(response);
         this.mCny = (float)json.getJSONObject(COINID).getDouble(CNYPRICE);
         this.mUsd = (float)json.getJSONObject(COINID).getDouble(USDPRICE);
-        log.info("curry " + mCny + "; " + mUsd);
         this.result = response;
     }
 
