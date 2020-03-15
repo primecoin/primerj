@@ -104,6 +104,7 @@ public class PrimerUrl {
             + "api/v1/exchange/%d/depth";
     public static final String BITHER_TREND_URL = PRIMER_DNS.BITHER_STATS
             + "api/v1/exchange/%d/trend";
+    public static final String BITHER_SIMPLE_PRICE = "https://api.coingecko.com/api/v3/simple/price?ids=primecoin&vs_currencies=usd%2Ccny";
 
     //other
     public static final String BCHAIN_INFO_ADDRESS_URL = "https://explorer.primecoin.net/address/";
