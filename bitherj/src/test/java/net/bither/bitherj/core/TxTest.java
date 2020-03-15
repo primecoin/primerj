@@ -20,6 +20,7 @@ import net.bither.bitherj.db.AbstractDb;
 import net.bither.bitherj.PrimerjSettings;
 import net.bither.bitherj.utils.Utils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 public class TxTest {
+    @Ignore("Database required")
     @Test
     public void testDb() {
         Tx tx = new Tx();
