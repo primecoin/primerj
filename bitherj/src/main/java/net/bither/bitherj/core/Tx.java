@@ -986,6 +986,7 @@ public class Tx extends Message implements Comparable<Tx> {
         }
 
         // Every input is now complete.
+        this.recalculateTxHash();
     }
 
     /**
