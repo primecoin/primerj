@@ -55,6 +55,8 @@ public class PushTxThirdParty {
     }
 
     public void pushTx(Tx tx) {
+        String raw = Utils.bytesToHexString(tx.bitcoinSerialize());
+        // Transaction push disabled for Bitcoin explorers, e.g. pushToBlockChainInfo()
     }
 
     private void pushToBlockChainInfo(String rawTx) {
