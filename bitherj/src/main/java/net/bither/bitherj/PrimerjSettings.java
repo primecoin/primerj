@@ -217,12 +217,12 @@ public class PrimerjSettings {
     }
 
     public enum MarketType {
-        COINMARKETCAP ;
+        COINHECKO ;
     }
 
     public static MarketType getMarketType(int value) {
 
-        return MarketType.COINMARKETCAP;
+        return MarketType.COINHECKO;
     }
 
     public static int getMarketValue(MarketType marketType) {

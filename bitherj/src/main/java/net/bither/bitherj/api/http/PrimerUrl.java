@@ -126,6 +126,7 @@ public class PrimerUrl {
     public static final String BLOCKCHAIN_INFO_SPVBLOCK_NEW = "https://insight.bitpay.com/api/block/";
     //波浪綫接口
     public static final String GRAPHIC_API = "https://graphs2.coinmarketcap.com/currencies/primecoin/";
+    public static final String GRAPHIC_COINGECKO_API = "https://api.coingecko.com/api/v3/coins/primecoin/market_chart?vs_currency=usd&days=1";
 
     //获取某个地址的交易列表数据
     public static final String DEAL_ADDRESS = "https://insight.bitpay.com/api/txs/?address=";

@@ -23,7 +23,7 @@ import net.bither.bitherj.api.http.HttpGetResponse;
 public class GetExchangeTrendApiNew extends HttpGetResponse<String> {
 
     public GetExchangeTrendApiNew() {
-        setUrl(PrimerUrl.GRAPHIC_API);
+        setUrl(PrimerUrl.GRAPHIC_COINGECKO_API);
 
     }
 
