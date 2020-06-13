@@ -4,12 +4,12 @@ package net.bither.bitherj.api;
 import net.bither.bitherj.api.http.HttpGetResponse;
 import net.bither.bitherj.api.http.PrimerUrl;
 
-public class GetFiatSupplyApi extends HttpGetResponse<String> {
+public class GetPrimecoinSupplyApi extends HttpGetResponse<String> {
 
     private String mSupply;
 
-    public GetFiatSupplyApi() {
-        setUrl(PrimerUrl.PRIMER_FIAT_SUPPLY_URL);
+    public GetPrimecoinSupplyApi() {
+        setUrl(PrimerUrl.PRIMECOIN_SUPPLY_URL);
     }
 
     @Override

@@ -105,7 +105,7 @@ public class PrimerUrl {
     public static final String BITHER_TREND_URL = PRIMER_DNS.BITHER_STATS
             + "api/v1/exchange/%d/trend";
     public static final String PRIMER_FIAT_PRICE_URL = "https://api.coingecko.com/api/v3/simple/price?ids=primecoin&vs_currencies=usd%2Ccny";
-    public static final String PRIMER_FIAT_SUPPLY_URL = "https://api.blockseek.io/xpm/supply";
+    public static final String PRIMECOIN_SUPPLY_URL = "https://api.blockseek.io/xpm/supply";
 
     //other
     public static final String BCHAIN_INFO_ADDRESS_URL = "https://explorer.primecoin.net/address/";
