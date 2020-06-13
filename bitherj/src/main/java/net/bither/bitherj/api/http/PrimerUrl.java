@@ -105,6 +105,7 @@ public class PrimerUrl {
     public static final String BITHER_TREND_URL = PRIMER_DNS.BITHER_STATS
             + "api/v1/exchange/%d/trend";
     public static final String PRIMER_FIAT_PRICE_URL = "https://api.coingecko.com/api/v3/simple/price?ids=primecoin&vs_currencies=usd%2Ccny";
+    public static final String PRIMECOIN_SUPPLY_URL = "https://api.blockseek.io/xpm/supply";
 
     //other
     public static final String BCHAIN_INFO_ADDRESS_URL = "https://explorer.primecoin.net/address/";
@@ -126,6 +127,7 @@ public class PrimerUrl {
     public static final String BLOCKCHAIN_INFO_SPVBLOCK_NEW = "https://insight.bitpay.com/api/block/";
     //波浪綫接口
     public static final String GRAPHIC_API = "https://graphs2.coinmarketcap.com/currencies/primecoin/";
+    public static final String GRAPHIC_COINGECKO_API = "https://api.coingecko.com/api/v3/coins/primecoin/market_chart?vs_currency=usd&days=1";
 
     //获取某个地址的交易列表数据
     public static final String DEAL_ADDRESS = "https://insight.bitpay.com/api/txs/?address=";
