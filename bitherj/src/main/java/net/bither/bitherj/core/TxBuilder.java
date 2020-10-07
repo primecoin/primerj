@@ -623,12 +623,12 @@ class TxBuilderDefault implements TxBuilderProtocol {
                 change += additionalValueSelected;
 
             if (PrimerjSettings.ensureMinRequiredFee && change != 0 && change < Utils.CENT
-                    && fees < Utils.getFeeBase()) {
+                    && fees < Utils.CENT) { // not applicable since rfc-0002
                 // This solution may fit into category 2, but it may also be category 3, we'll check that later
                 eitherCategory2Or3 = true;
                 additionalValueForNextCategory = Utils.CENT;
                 // If the change is smaller than the fee we want to add, this will be negative
-                change -= Utils.getFeeBase() - fees;
+                change -= Utils.CENT - fees;
             }
 
             int size = 0;
@@ -638,10 +638,10 @@ class TxBuilderDefault implements TxBuilderProtocol {
                 changeOutput.setOutValue(change);
                 changeOutput.setOutAddress(changeAddress);
                 // If the change output would result in this transaction being rejected as dust, just drop the change and make it a fee
-                if (PrimerjSettings.ensureMinRequiredFee && Tx.MIN_NONDUST_OUTPUT >= change) {
+                if (PrimerjSettings.ensureMinRequiredFee && Tx.MIN_CHANGE_OUTPUT > change) {
                     // This solution definitely fits in category 3
                     isCategory3 = true;
-                    additionalValueForNextCategory = Utils.getFeeBase() + Tx.MIN_NONDUST_OUTPUT + 1;
+                    additionalValueForNextCategory = 0;
                 } else {
                     size += 34;
                     // This solution is either category 1 or 2
@@ -803,12 +803,12 @@ class TxBuilderDefault implements TxBuilderProtocol {
                 change += additionalValueSelected;
 
             if (PrimerjSettings.ensureMinRequiredFee && change != 0 && change < Utils.CENT
-                    && fees < Utils.getFeeBase()) {
+                    && fees < Utils.CENT) { // not applicable since rfc-0002
                 // This solution may fit into category 2, but it may also be category 3, we'll check that later
                 eitherCategory2Or3 = true;
                 additionalValueForNextCategory = Utils.CENT;
                 // If the change is smaller than the fee we want to add, this will be negative
-                change -= Utils.getFeeBase() - fees;
+                change -= Utils.CENT - fees;
             }
 
             int size = 0;
@@ -818,10 +818,10 @@ class TxBuilderDefault implements TxBuilderProtocol {
                 changeOutput.setOutValue(change);
                 changeOutput.setOutAddress(changeAddress);
                 // If the change output would result in this transaction being rejected as dust, just drop the change and make it a fee
-                if (PrimerjSettings.ensureMinRequiredFee && Tx.MIN_NONDUST_OUTPUT >= change) {
+                if (PrimerjSettings.ensureMinRequiredFee && Tx.MIN_CHANGE_OUTPUT > change) {
                     // This solution definitely fits in category 3
                     isCategory3 = true;
-                    additionalValueForNextCategory = Utils.getFeeBase() + Tx.MIN_NONDUST_OUTPUT + 1;
+                    additionalValueForNextCategory = 0;
                 } else {
                     size += 34;
                     // This solution is either category 1 or 2
