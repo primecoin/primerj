@@ -122,7 +122,8 @@ public class Tx extends Message implements Comparable<Tx> {
      * This is calculated by assuming a standard output will be 34 bytes,
      * and then using the formula used in
      */
-    public static final long MIN_NONDUST_OUTPUT = 1000000;//5460
+    public static final long MIN_NONDUST_OUTPUT = Utils.CENT; //5460
+    public static final long MIN_CHANGE_OUTPUT = 25 * Utils.CENT;
 
 
     public Tx() {
