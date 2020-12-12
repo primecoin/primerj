@@ -348,6 +348,7 @@ public class PeerManager {
                     peer.connectSucceed();
                     if (isOnlyBroadcasting()) {
                         for (Tx tx : publishedTx.values()) {
+                            log.info("gak to peer.send A " + tx.getSource());
                             if (tx.getSource() > 0 && tx.getSource() <= MaxPeerCount) {
                                 peer.sendInvMessageWithTxHash(new Sha256Hash(tx.getTxHash()));
                             }
@@ -366,6 +367,7 @@ public class PeerManager {
                         }
                         peer.sendFilterLoadMessage(bloomFilterForPeer(peer));
                         for (Tx tx : publishedTx.values()) {
+                            log.info("gak to peer.send B " + tx.getSource());
                             if (tx.getSource() > 0 && tx.getSource() <= MaxPeerCount) {
                                 peer.sendInvMessageWithTxHash(new Sha256Hash(tx.getTxHash()));
                             }
@@ -443,6 +445,7 @@ public class PeerManager {
                 p.sendFilterLoadMessage(bloomFilterForPeer(p));
             }
             for (Tx tx : publishedTx.values()) {
+                log.info("gak to peer.send C " + tx.getSource());
                 if (tx.getSource() > 0 && tx.getSource() <= MaxPeerCount) {
                     p.sendInvMessageWithTxHash(new Sha256Hash(tx.getTxHash()));
                 }
@@ -836,6 +839,7 @@ public class PeerManager {
 //                for (Peer p : connectedPeers) {
 //                    p.sendFilterLoadMessage(getBloomFilter());
 //                }
+                log.info("gak to peer.send D " + connectedPeers.size());
                 if (connectedPeers.size() > 0) {
                     Iterator<Peer> iterator = connectedPeers.iterator();
                     Sha256Hash hash = new Sha256Hash(tx.getTxHash());

@@ -889,6 +889,7 @@ public class Peer extends PeerSocketHandler {
     }
 
     public void sendInvMessageWithTxHash(Sha256Hash txHash) {
+        log.info("gak sendInvMessageWithTxHash " + state.toString());
         if (state != State.Connected) {
             return;
         }
