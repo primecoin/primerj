@@ -230,14 +230,14 @@ public class PrimerjSettings {
     }
 
     public static boolean validAddressPrefixPubkey(int pubkey) {
-        if (pubkey == addressHeader || pubkey == testNetAddressHeader || pubkey == btcAddressHeader) {
+        if (pubkey == PrimerjSettings.getAddressHeader(Utils.getNetType())) {
             return true;
         }
         return false;
     }
 
     public static boolean validAddressPrefixScript(int script) {
-        if (script == p2shHeader || script == testNetP2shHeader || script == btcP2shHeader) {
+        if (script == PrimerjSettings.getP2shHeader(Utils.getNetType())) {
             return true;
         }
         return false;
